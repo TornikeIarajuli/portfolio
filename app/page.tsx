@@ -7,6 +7,11 @@ import Experience from '@/components/Experience';
 import Skills from '@/components/Skills';
 import Contact from '@/components/Contact';
 import Navigation from '@/components/Navigation';
+import LoadingScreen from '@/components/LoadingScreen';
+import BackgroundParticles from '@/components/BackgroundParticles';
+import KonamiCode from '@/components/KonamiCode';
+import { SoundProvider } from '@/components/SoundEffects';
+import ScrollAnimation from '@/components/ScrollAnimation';
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState('hero');
@@ -30,13 +35,32 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0a0014] retro-grid scanlines">
-      <Navigation activeSection={activeSection} />
-      <Hero />
-      <About />
-      <Experience />
-      <Skills />
-      <Contact />
-    </div>
+    <SoundProvider>
+      <LoadingScreen />
+      <BackgroundParticles />
+      <KonamiCode />
+
+      <div className="min-h-screen bg-[#0a0014] retro-grid scanlines relative">
+        <Navigation activeSection={activeSection} />
+
+        <Hero />
+
+        <ScrollAnimation delay={100}>
+          <About />
+        </ScrollAnimation>
+
+        <ScrollAnimation delay={200}>
+          <Experience />
+        </ScrollAnimation>
+
+        <ScrollAnimation delay={100}>
+          <Skills />
+        </ScrollAnimation>
+
+        <ScrollAnimation delay={100}>
+          <Contact />
+        </ScrollAnimation>
+      </div>
+    </SoundProvider>
   );
 }
