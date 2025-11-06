@@ -2,15 +2,24 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { addToLeaderboard, trackGamePlayed, checkAchievement } from '@/lib/gameStats';
+import AchievementToast from '@/components/AchievementToast';
+import { getAchievements } from '@/lib/gameStats';
 
 type Position = { x: number; y: number };
 type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
+type Difficulty = 'easy' | 'medium' | 'hard';
 
 const GRID_SIZE = 15;
 const CELL_SIZE = 25;
 const INITIAL_SNAKE: Position[] = [{ x: 7, y: 7 }];
 const INITIAL_DIRECTION: Direction = 'RIGHT';
-const GAME_SPEED = 150;
+
+const DIFFICULTY_SETTINGS = {
+  easy: { speed: 200, scoreMultiplier: 1 },
+  medium: { speed: 150, scoreMultiplier: 1.5 },
+  hard: { speed: 100, scoreMultiplier: 2 },
+};
 
 export default function SnakeGame() {
   const [snake, setSnake] = useState<Position[]>(INITIAL_SNAKE);
@@ -21,6 +30,9 @@ export default function SnakeGame() {
   const [score, setScore] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
+  const [difficulty, setDifficulty] = useState<Difficulty>('medium');
+  const [showDifficultySelect, setShowDifficultySelect] = useState(true);
+  const [unlockedAchievement, setUnlockedAchievement] = useState<any>(null);
 
   const generateFood = useCallback((snakeBody: Position[]): Position => {
     let newFood: Position;
@@ -32,6 +44,20 @@ export default function SnakeGame() {
     } while (snakeBody.some((segment) => segment.x === newFood.x && segment.y === newFood.y));
     return newFood;
   }, []);
+
+  const startGameWithDifficulty = (selectedDifficulty: Difficulty) => {
+    trackGamePlayed('snake');
+    setDifficulty(selectedDifficulty);
+    setShowDifficultySelect(false);
+    setSnake(INITIAL_SNAKE);
+    setFood(generateFood(INITIAL_SNAKE));
+    setDirection(INITIAL_DIRECTION);
+    setNextDirection(INITIAL_DIRECTION);
+    setGameOver(false);
+    setScore(0);
+    setIsPaused(false);
+    setGameStarted(true);
+  };
 
   const resetGame = () => {
     setSnake(INITIAL_SNAKE);
@@ -86,7 +112,8 @@ export default function SnakeGame() {
       const newSnake = [newHead, ...prevSnake];
 
       if (newHead.x === food.x && newHead.y === food.y) {
-        setScore((prev) => prev + 10);
+        const points = Math.floor(10 * DIFFICULTY_SETTINGS[difficulty].scoreMultiplier);
+        setScore((prev) => prev + points);
         setFood(generateFood(newSnake));
       } else {
         newSnake.pop();
@@ -94,11 +121,11 @@ export default function SnakeGame() {
 
       return newSnake;
     });
-  }, [nextDirection, food, gameOver, isPaused, gameStarted, generateFood]);
+  }, [nextDirection, food, gameOver, isPaused, gameStarted, generateFood, difficulty]);
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      if (!gameStarted && e.key === ' ') {
+      if (!gameStarted && !showDifficultySelect && e.key === ' ') {
         resetGame();
         return;
       }
@@ -132,15 +159,37 @@ export default function SnakeGame() {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [direction, gameOver, gameStarted]);
+  }, [direction, gameOver, gameStarted, showDifficultySelect]);
 
   useEffect(() => {
-    const gameLoop = setInterval(moveSnake, GAME_SPEED);
+    if (gameOver && score > 0) {
+      const achievements = checkAchievement('snake_score', score);
+      if (achievements) {
+        const achievement = getAchievements().find(a => a.id === achievements);
+        setUnlockedAchievement(achievement);
+      }
+      addToLeaderboard('snake', {
+        playerName: 'Player',
+        score: score,
+        date: new Date().toISOString(),
+        difficulty: difficulty,
+      });
+    }
+  }, [gameOver, score, difficulty]);
+
+  useEffect(() => {
+    const gameSpeed = DIFFICULTY_SETTINGS[difficulty].speed;
+    const gameLoop = setInterval(moveSnake, gameSpeed);
     return () => clearInterval(gameLoop);
-  }, [moveSnake]);
+  }, [moveSnake, difficulty]);
 
   return (
     <div className="min-h-screen bg-[#0a0014] retro-grid scanlines flex items-center justify-center p-6">
+      <AchievementToast
+        achievement={unlockedAchievement}
+        onClose={() => setUnlockedAchievement(null)}
+      />
+
       <div className="container mx-auto max-w-4xl">
         {/* Retro back button */}
         <Link
@@ -161,13 +210,21 @@ export default function SnakeGame() {
             </div>
 
             {/* Score display */}
-            <div className="flex justify-center gap-8 mb-4">
+            <div className="flex justify-center gap-4 mb-4">
               <div className="bg-black border-4 border-[#ffff00] px-6 py-3">
                 <p className="text-xs text-[#00ffff] tracking-wider mb-1">SCORE</p>
                 <p className="text-3xl font-bold text-[#ffff00] tracking-widest" style={{textShadow: '0 0 15px #ffff00'}}>
                   {score.toString().padStart(4, '0')}
                 </p>
               </div>
+              {gameStarted && (
+                <div className="bg-black border-4 border-[#ff10f0] px-6 py-3">
+                  <p className="text-xs text-[#00ffff] tracking-wider mb-1">DIFFICULTY</p>
+                  <p className="text-xl font-bold text-[#ff10f0] tracking-widest uppercase" style={{textShadow: '0 0 15px #ff10f0'}}>
+                    {difficulty}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -231,19 +288,76 @@ export default function SnakeGame() {
                       <p className="text-5xl text-[#ffff00] font-bold tracking-widest mt-2" style={{textShadow: '0 0 20px #ffff00'}}>
                         {score.toString().padStart(4, '0')}
                       </p>
+                      <p className="text-[#ff10f0] tracking-wider mt-2 uppercase">
+                        {difficulty} MODE
+                      </p>
                     </div>
-                    <button
-                      onClick={resetGame}
-                      className="retro-btn px-8 py-3 text-white"
-                    >
-                      ▶ PLAY AGAIN
-                    </button>
+                    <div className="flex gap-4 justify-center">
+                      <button
+                        onClick={resetGame}
+                        className="px-6 py-3 bg-black border-3 border-[#00ffff] text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-all duration-200 font-bold tracking-wider"
+                        style={{borderWidth: '3px'}}
+                      >
+                        ▶ PLAY AGAIN
+                      </button>
+                      <button
+                        onClick={() => {
+                          setGameOver(false);
+                          setGameStarted(false);
+                          setShowDifficultySelect(true);
+                        }}
+                        className="px-6 py-3 bg-black border-3 border-[#ffff00] text-[#ffff00] hover:bg-[#ffff00] hover:text-black transition-all duration-200 font-bold tracking-wider"
+                        style={{borderWidth: '3px'}}
+                      >
+                        ⚙ CHANGE DIFFICULTY
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
 
-              {/* Start Screen */}
-              {!gameStarted && !gameOver && (
+              {/* Difficulty Selection Screen */}
+              {!gameStarted && !gameOver && showDifficultySelect && (
+                <div className="absolute inset-0 bg-black/95 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="border-4 border-[#00ffff] neon-border-cyan bg-black px-8 py-6 mb-6">
+                      <h2 className="text-3xl font-bold text-[#00ffff] mb-4 tracking-widest neon-text-cyan">
+                        SELECT DIFFICULTY
+                      </h2>
+                      <div className="space-y-3">
+                        <button
+                          onClick={() => startGameWithDifficulty('easy')}
+                          className="w-full px-8 py-3 bg-black border-3 border-[#39ff14] text-[#39ff14] hover:bg-[#39ff14] hover:text-black transition-all duration-200 font-bold tracking-wider"
+                          style={{borderWidth: '3px'}}
+                        >
+                          ▶ EASY - SLOWER SPEED
+                        </button>
+                        <button
+                          onClick={() => startGameWithDifficulty('medium')}
+                          className="w-full px-8 py-3 bg-black border-3 border-[#ffff00] text-[#ffff00] hover:bg-[#ffff00] hover:text-black transition-all duration-200 font-bold tracking-wider"
+                          style={{borderWidth: '3px'}}
+                        >
+                          ▶ MEDIUM - NORMAL SPEED
+                        </button>
+                        <button
+                          onClick={() => startGameWithDifficulty('hard')}
+                          className="w-full px-8 py-3 bg-black border-3 border-[#ff0000] text-[#ff0000] hover:bg-[#ff0000] hover:text-black transition-all duration-200 font-bold tracking-wider"
+                          style={{borderWidth: '3px'}}
+                        >
+                          ▶ HARD - FASTER SPEED
+                        </button>
+                      </div>
+                    </div>
+                    <div className="text-[#39ff14] text-sm tracking-wider space-y-1 font-mono">
+                      <p>🎯 HIGHER DIFFICULTY = MORE POINTS</p>
+                      <p>▲ ▼ ◀ ▶ ARROW KEYS TO MOVE</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Start Screen (when restarting without difficulty select) */}
+              {!gameStarted && !gameOver && !showDifficultySelect && (
                 <div className="absolute inset-0 bg-black/95 flex items-center justify-center">
                   <div className="text-center">
                     <div className="border-4 border-[#00ffff] neon-border-cyan bg-black px-8 py-6 mb-6">
@@ -300,8 +414,9 @@ export default function SnakeGame() {
               <div className="text-[#00ffff] text-xs tracking-wider space-y-1 font-mono">
                 <p>🎮 USE ARROW KEYS TO CONTROL SNAKE</p>
                 <p>⏸ PRESS SPACE TO PAUSE/RESUME</p>
-                <p>🍎 EAT FOOD TO GROW & SCORE +10 POINTS</p>
+                <p>🍎 EAT FOOD TO GROW & SCORE POINTS</p>
                 <p>⚡ SNAKE WRAPS AROUND THE EDGES</p>
+                <p>🎯 EASY: +10 | MEDIUM: +15 | HARD: +20 POINTS</p>
               </div>
             </div>
           </div>

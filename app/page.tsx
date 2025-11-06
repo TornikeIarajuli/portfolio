@@ -12,9 +12,13 @@ import BackgroundParticles from '@/components/BackgroundParticles';
 import KonamiCode from '@/components/KonamiCode';
 import { SoundProvider } from '@/components/SoundEffects';
 import ScrollAnimation from '@/components/ScrollAnimation';
+import AchievementsModal from '@/components/AchievementsModal';
+import LeaderboardModal from '@/components/LeaderboardModal';
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState('hero');
+  const [achievementsOpen, setAchievementsOpen] = useState(false);
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,9 +43,15 @@ export default function Home() {
       <LoadingScreen />
       <BackgroundParticles />
       <KonamiCode />
+      <AchievementsModal isOpen={achievementsOpen} onClose={() => setAchievementsOpen(false)} />
+      <LeaderboardModal isOpen={leaderboardOpen} onClose={() => setLeaderboardOpen(false)} />
 
       <div className="min-h-screen bg-[#0a0014] retro-grid scanlines relative">
-        <Navigation activeSection={activeSection} />
+        <Navigation
+          activeSection={activeSection}
+          onOpenAchievements={() => setAchievementsOpen(true)}
+          onOpenLeaderboard={() => setLeaderboardOpen(true)}
+        />
 
         <Hero />
 

@@ -69,8 +69,8 @@ export function SoundProvider({ children }: { children: ReactNode }) {
       {/* Mute toggle button */}
       <button
         onClick={toggleMute}
-        className="fixed bottom-6 right-6 z-40 bg-black border-3 border-[#ff10f0] px-4 py-3 text-[#ff10f0] hover:bg-[#ff10f0] hover:text-black transition-all duration-200 font-bold tracking-wider pixel-corners"
-        style={{ borderWidth: '3px' }}
+        className="fixed bottom-6 right-6 bg-black border-3 border-[#ff10f0] px-4 py-3 text-[#ff10f0] hover:bg-[#ff10f0] hover:text-black transition-all duration-200 font-bold tracking-wider pixel-corners shadow-lg"
+        style={{ borderWidth: '3px', zIndex: 9999 }}
         title={isMuted ? 'Unmute sounds' : 'Mute sounds'}
       >
         {isMuted ? '🔇 MUTED' : '🔊 SOUND'}

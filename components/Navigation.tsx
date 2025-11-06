@@ -4,9 +4,11 @@ import Link from 'next/link';
 
 interface NavigationProps {
   activeSection: string;
+  onOpenAchievements?: () => void;
+  onOpenLeaderboard?: () => void;
 }
 
-export default function Navigation({ activeSection }: NavigationProps) {
+export default function Navigation({ activeSection, onOpenAchievements, onOpenLeaderboard }: NavigationProps) {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     element?.scrollIntoView({ behavior: 'smooth' });
@@ -24,6 +26,7 @@ export default function Navigation({ activeSection }: NavigationProps) {
     { id: 'snake', label: 'SNAKE', icon: '🐍' },
     { id: 'tictactoe', label: 'TIC-TAC-TOE', icon: '❌' },
     { id: 'memory', label: 'MEMORY', icon: '🎴' },
+    { id: 'pong', label: 'PONG', icon: '🏓' },
   ];
 
   return (
@@ -40,7 +43,7 @@ export default function Navigation({ activeSection }: NavigationProps) {
               <li key={item.id}>
                 <button
                   onClick={() => scrollToSection(item.id)}
-                  className={`transition-all duration-200 font-bold tracking-wider text-sm ${
+                  className={`transition-all duration-200 font-bold tracking-wider text-sm cursor-pointer ${
                     activeSection === item.id
                       ? 'text-[#ff10f0] neon-text scale-110'
                       : 'text-[#00ffff] hover:text-[#ff10f0] hover:scale-105'
@@ -53,7 +56,7 @@ export default function Navigation({ activeSection }: NavigationProps) {
 
             {/* Arcade Games dropdown */}
             <li className="relative group">
-              <button className="text-[#39ff14] hover:text-[#ffff00] transition-all duration-200 flex items-center gap-1 font-bold tracking-wider text-sm border-2 border-[#39ff14] px-3 py-1 hover:border-[#ffff00]">
+              <button className="text-[#39ff14] hover:text-[#ffff00] transition-all duration-200 flex items-center gap-1 font-bold tracking-wider text-sm border-2 border-[#39ff14] px-3 py-1 hover:border-[#ffff00] cursor-pointer">
                 🎮 GAMES
                 <svg
                   className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180"
@@ -79,6 +82,30 @@ export default function Navigation({ activeSection }: NavigationProps) {
                 ))}
               </div>
             </li>
+
+            {/* Achievements button */}
+            {onOpenAchievements && (
+              <li>
+                <button
+                  onClick={onOpenAchievements}
+                  className="text-[#ffff00] hover:text-[#ff10f0] transition-all duration-200 flex items-center gap-1 font-bold tracking-wider text-sm border-2 border-[#ffff00] px-3 py-1 hover:border-[#ff10f0] cursor-pointer"
+                >
+                  🏆 TROPHIES
+                </button>
+              </li>
+            )}
+
+            {/* Leaderboard button */}
+            {onOpenLeaderboard && (
+              <li>
+                <button
+                  onClick={onOpenLeaderboard}
+                  className="text-[#00ffff] hover:text-[#ff10f0] transition-all duration-200 flex items-center gap-1 font-bold tracking-wider text-sm border-2 border-[#00ffff] px-3 py-1 hover:border-[#ff10f0] cursor-pointer"
+                >
+                  📊 RANKS
+                </button>
+              </li>
+            )}
           </ul>
         </div>
       </div>
