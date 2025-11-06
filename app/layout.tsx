@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Tornike Iarajuli - QA Chapter Lead & Test Automation Expert",
+  title: "Tornike Iarajuli - Senior QA Engineer",
   description: "Portfolio of Tornike Iarajuli, QA Chapter Lead with 6+ years of experience in test automation, quality assurance, and team leadership.",
 };
 
