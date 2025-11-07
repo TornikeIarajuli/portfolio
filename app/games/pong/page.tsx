@@ -155,8 +155,8 @@ export default function PongGame() {
     }
   }, [gameStarted, isPaused, gameOver, playSound]);
 
-  const handleNameSubmit = (playerName: string) => {
-    if (pendingScore !== null) {
+  const handleNameSubmit = (playerName?: string) => {
+    if (pendingScore !== null && playerName) {
       addToLeaderboard('pong', {
         playerName,
         score: pendingScore,
