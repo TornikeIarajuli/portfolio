@@ -32,7 +32,8 @@ export default function ShortcutsModal({ isOpen, onClose }: ShortcutsModalProps)
     ],
     'Space Invaders': [
       { keys: ['←', '→'], action: 'Move ship' },
-      { keys: ['SPACE'], action: 'Shoot / Pause game' },
+      { keys: ['SPACE'], action: 'Shoot' },
+      { keys: ['P'], action: 'Pause game' },
     ],
   };
 

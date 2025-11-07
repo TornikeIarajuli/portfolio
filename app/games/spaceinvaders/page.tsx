@@ -127,7 +127,7 @@ export default function SpaceInvadersGame() {
         y: CANVAS_HEIGHT - PLAYER_HEIGHT - 10,
         isEnemy: false,
       });
-      playSound('shoot');
+      playSound('paddleHit');
       state.lastShot = now;
     }
 
@@ -183,7 +183,7 @@ export default function SpaceInvadersGame() {
         ) {
           state.enemies[enemyIndex].alive = false;
           state.bullets.splice(bulletIndex, 1);
-          playSound('hit');
+          playSound('success');
           setScore((prev) => {
             const newScore = prev + 100;
             updateAchievementProgress('space_ace', newScore, 5000);
@@ -204,7 +204,7 @@ export default function SpaceInvadersGame() {
         bullet.y + BULLET_HEIGHT > CANVAS_HEIGHT - PLAYER_HEIGHT - 10
       ) {
         state.bullets.splice(bulletIndex, 1);
-        playSound('hit');
+        playSound('error');
         triggerShake('medium');
         setLives((prev) => {
           const newLives = prev - 1;
@@ -244,8 +244,8 @@ export default function SpaceInvadersGame() {
     });
   }, [gameStarted, isPaused, gameOver, playSound, triggerShake, score, nextWave]);
 
-  const handleNameSubmit = (playerName: string) => {
-    if (pendingScore !== null) {
+  const handleNameSubmit = (playerName?: string) => {
+    if (pendingScore !== null && playerName) {
       addToLeaderboard('spaceinvaders', {
         playerName,
         score: pendingScore,
@@ -312,10 +312,16 @@ export default function SpaceInvadersGame() {
       if (e.key === ' ' && !gameStarted) {
         startGame();
         e.preventDefault();
-      } else if (e.key === ' ' && gameStarted && !gameOver) {
+        return;
+      }
+
+      // Use 'p' for pause instead of space
+      if (e.key === 'p' && gameStarted && !gameOver) {
         setIsPaused((prev) => !prev);
         e.preventDefault();
+        return;
       }
+
       gameStateRef.current.keys[e.key] = true;
     };
 
@@ -409,6 +415,7 @@ export default function SpaceInvadersGame() {
                   <div className="text-[#39ff14] text-sm tracking-wider space-y-1 font-mono">
                     <p>◀ ▶ ARROW KEYS TO MOVE</p>
                     <p>SPACE TO SHOOT</p>
+                    <p>P TO PAUSE</p>
                     <p>DEFEND EARTH FROM INVADERS!</p>
                   </div>
                 </div>
@@ -421,7 +428,7 @@ export default function SpaceInvadersGame() {
                   <h2 className="text-4xl font-bold text-[#ffff00] mb-2 tracking-widest" style={{ textShadow: '0 0 20px #ffff00' }}>
                     ⏸ PAUSED
                   </h2>
-                  <p className="text-[#00ffff] tracking-wider">PRESS SPACE TO CONTINUE</p>
+                  <p className="text-[#00ffff] tracking-wider">PRESS P TO CONTINUE</p>
                 </div>
               </div>
             )}
@@ -470,7 +477,7 @@ export default function SpaceInvadersGame() {
               <div className="text-[#00ffff] text-xs tracking-wider space-y-1 font-mono">
                 <p>🎮 USE ◀ ▶ ARROW KEYS TO MOVE</p>
                 <p>🔫 PRESS SPACE TO SHOOT</p>
-                <p>⏸ PRESS SPACE TO PAUSE/RESUME</p>
+                <p>⏸ PRESS P TO PAUSE/RESUME</p>
                 <p>👾 DESTROY ALL INVADERS TO ADVANCE TO NEXT WAVE</p>
               </div>
             </div>

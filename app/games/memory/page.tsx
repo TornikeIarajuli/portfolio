@@ -126,8 +126,8 @@ export default function MemoryGame() {
     }
   }, [matches, gameStarted, timer, moves, bestTime, bestMoves, difficulty, playSound]);
 
-  const handleNameSubmit = (playerName: string) => {
-    if (pendingScore !== null) {
+  const handleNameSubmit = (playerName?: string) => {
+    if (pendingScore !== null && playerName) {
       addToLeaderboard('memory', {
         playerName,
         score: pendingScore.score,
