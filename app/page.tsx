@@ -14,11 +14,13 @@ import { SoundProvider } from '@/components/SoundEffects';
 import ScrollAnimation from '@/components/ScrollAnimation';
 import AchievementsModal from '@/components/AchievementsModal';
 import LeaderboardModal from '@/components/LeaderboardModal';
+import PlayerNamePrompt from '@/components/PlayerNamePrompt';
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState('hero');
   const [achievementsOpen, setAchievementsOpen] = useState(false);
   const [leaderboardOpen, setLeaderboardOpen] = useState(false);
+  const [playerNameOpen, setPlayerNameOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,12 +47,14 @@ export default function Home() {
       <KonamiCode />
       <AchievementsModal isOpen={achievementsOpen} onClose={() => setAchievementsOpen(false)} />
       <LeaderboardModal isOpen={leaderboardOpen} onClose={() => setLeaderboardOpen(false)} />
+      <PlayerNamePrompt isOpen={playerNameOpen} onClose={() => setPlayerNameOpen(false)} />
 
       <div className="min-h-screen bg-[#0a0014] retro-grid scanlines relative">
         <Navigation
           activeSection={activeSection}
           onOpenAchievements={() => setAchievementsOpen(true)}
           onOpenLeaderboard={() => setLeaderboardOpen(true)}
+          onOpenPlayerName={() => setPlayerNameOpen(true)}
         />
 
         <Hero />

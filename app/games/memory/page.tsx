@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { addToLeaderboard, trackGamePlayed, checkAchievement } from '@/lib/gameStats';
+import { addToLeaderboard, trackGamePlayed, checkAchievement, getPlayerName, updateAchievementProgress } from '@/lib/gameStats';
 import AchievementToast from '@/components/AchievementToast';
+import PlayerNamePrompt from '@/components/PlayerNamePrompt';
 import { getAchievements } from '@/lib/gameStats';
+import { useSound } from '@/components/SoundEffects';
 
 interface Card {
   id: number;
@@ -24,6 +26,7 @@ const DIFFICULTY_SETTINGS = {
 };
 
 export default function MemoryGame() {
+  const { playSound } = useSound();
   const [cards, setCards] = useState<Card[]>([]);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [moves, setMoves] = useState(0);
@@ -37,6 +40,8 @@ export default function MemoryGame() {
   const [difficulty, setDifficulty] = useState<Difficulty>('medium');
   const [showDifficultySelect, setShowDifficultySelect] = useState(true);
   const [unlockedAchievement, setUnlockedAchievement] = useState<any>(null);
+  const [showNamePrompt, setShowNamePrompt] = useState(false);
+  const [pendingScore, setPendingScore] = useState<{score: number, timer: number} | null>(null);
 
   const startGameWithDifficulty = (selectedDifficulty: Difficulty) => {
     trackGamePlayed('memory');
@@ -83,6 +88,7 @@ export default function MemoryGame() {
     if (matches === pairCount && gameStarted) {
       setGameWon(true);
       setIsTimerRunning(false);
+      playSound('win');
 
       if (bestTime === null || timer < bestTime) {
         setBestTime(timer);
@@ -98,15 +104,37 @@ export default function MemoryGame() {
         const achievement = getAchievements().find(a => a.id === achievements);
         setUnlockedAchievement(achievement);
       }
+      const perfectAchievement = checkAchievement('memory_complete', { score, moves });
+      if (perfectAchievement && !achievements) {
+        const achievement = getAchievements().find(a => a.id === perfectAchievement);
+        setUnlockedAchievement(achievement);
+      }
+      // Update progress for time-based achievements (inverted - lower is better)
+      updateAchievementProgress('memory_genius', Math.max(0, 30 - timer), 30);
+      updateAchievementProgress('memory_speedster', Math.max(0, 20 - timer), 20);
+      updateAchievementProgress('perfect_memory', Math.max(0, 12 - moves), 12);
+      if (difficulty === 'hard') {
+        checkAchievement('hard_mode_complete', '');
+      }
 
+      // Show name prompt for score
+      setPendingScore({ score, timer });
+      setShowNamePrompt(true);
+    }
+  }, [matches, gameStarted, timer, moves, bestTime, bestMoves, difficulty, playSound]);
+
+  const handleNameSubmit = (playerName: string) => {
+    if (pendingScore !== null) {
       addToLeaderboard('memory', {
-        playerName: 'Player',
-        score: score,
+        playerName,
+        score: pendingScore.score,
         date: new Date().toISOString(),
         difficulty: difficulty,
       });
     }
-  }, [matches, gameStarted, timer, moves, bestTime, bestMoves, difficulty]);
+    setShowNamePrompt(false);
+    setPendingScore(null);
+  };
 
   const handleCardClick = (index: number) => {
     const card = cards[index];
@@ -117,6 +145,7 @@ export default function MemoryGame() {
     const newCards = [...cards];
     newCards[index].isFlipped = true;
     setCards(newCards);
+    playSound('cardFlip');
 
     const newFlippedCards = [...flippedCards, index];
     setFlippedCards(newFlippedCards);
@@ -126,6 +155,7 @@ export default function MemoryGame() {
       const [firstIndex, secondIndex] = newFlippedCards;
 
       if (newCards[firstIndex].symbol === newCards[secondIndex].symbol) {
+        playSound('match');
         setTimeout(() => {
           const updatedCards = [...newCards];
           updatedCards[firstIndex].isMatched = true;
@@ -267,6 +297,10 @@ export default function MemoryGame() {
       <AchievementToast
         achievement={unlockedAchievement}
         onClose={() => setUnlockedAchievement(null)}
+      />
+      <PlayerNamePrompt
+        isOpen={showNamePrompt}
+        onClose={handleNameSubmit}
       />
 
       <div className="container mx-auto max-w-4xl">

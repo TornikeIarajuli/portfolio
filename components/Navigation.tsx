@@ -1,14 +1,39 @@
 'use client';
 
 import Link from 'next/link';
+import { useSound } from '@/components/SoundEffects';
+import { useEffect, useState } from 'react';
+import { getPlayerName } from '@/lib/gameStats';
 
 interface NavigationProps {
   activeSection: string;
   onOpenAchievements?: () => void;
   onOpenLeaderboard?: () => void;
+  onOpenPlayerName?: () => void;
 }
 
-export default function Navigation({ activeSection, onOpenAchievements, onOpenLeaderboard }: NavigationProps) {
+export default function Navigation({ activeSection, onOpenAchievements, onOpenLeaderboard, onOpenPlayerName }: NavigationProps) {
+  const { isMuted, toggleMute } = useSound();
+  const [playerName, setPlayerNameState] = useState('Player');
+
+  useEffect(() => {
+    setPlayerNameState(getPlayerName());
+
+    // Listen for storage changes to update name when changed in modal
+    const handleStorageChange = () => {
+      setPlayerNameState(getPlayerName());
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    // Also create a custom event for same-window updates
+    window.addEventListener('playerNameChanged', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('playerNameChanged', handleStorageChange);
+    };
+  }, []);
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     element?.scrollIntoView({ behavior: 'smooth' });
@@ -103,6 +128,30 @@ export default function Navigation({ activeSection, onOpenAchievements, onOpenLe
                   className="text-[#00ffff] hover:text-[#ff10f0] transition-all duration-200 flex items-center gap-1 font-bold tracking-wider text-sm border-2 border-[#00ffff] px-3 py-1 hover:border-[#ff10f0] cursor-pointer"
                 >
                   📊 RANKS
+                </button>
+              </li>
+            )}
+
+            {/* Sound toggle button */}
+            <li>
+              <button
+                onClick={toggleMute}
+                className="text-[#ff10f0] hover:text-[#ffff00] transition-all duration-200 flex items-center gap-1 font-bold tracking-wider text-sm border-2 border-[#ff10f0] px-3 py-1 hover:border-[#ffff00] cursor-pointer"
+                title={isMuted ? 'Unmute sounds' : 'Mute sounds'}
+              >
+                {isMuted ? '🔇' : '🔊'}
+              </button>
+            </li>
+
+            {/* Player name button */}
+            {onOpenPlayerName && (
+              <li>
+                <button
+                  onClick={onOpenPlayerName}
+                  className="text-[#39ff14] hover:text-[#ff10f0] transition-all duration-200 flex items-center gap-1 font-bold tracking-wider text-sm border-2 border-[#39ff14] px-3 py-1 hover:border-[#ff10f0] cursor-pointer"
+                  title="Change player name"
+                >
+                  👤 {playerName}
                 </button>
               </li>
             )}

@@ -2,9 +2,11 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
-import { addToLeaderboard, trackGamePlayed, checkAchievement } from '@/lib/gameStats';
+import { addToLeaderboard, trackGamePlayed, checkAchievement, getPlayerName, updateAchievementProgress } from '@/lib/gameStats';
 import AchievementToast from '@/components/AchievementToast';
+import PlayerNamePrompt from '@/components/PlayerNamePrompt';
 import { getAchievements } from '@/lib/gameStats';
+import { useSound } from '@/components/SoundEffects';
 
 const CANVAS_WIDTH = 800;
 const CANVAS_HEIGHT = 600;
@@ -15,6 +17,7 @@ const PADDLE_SPEED = 8;
 const BALL_SPEED = 5;
 
 export default function PongGame() {
+  const { playSound } = useSound();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameOver, setGameOver] = useState(false);
@@ -22,6 +25,8 @@ export default function PongGame() {
   const [aiScore, setAiScore] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [unlockedAchievement, setUnlockedAchievement] = useState<any>(null);
+  const [showNamePrompt, setShowNamePrompt] = useState(false);
+  const [pendingScore, setPendingScore] = useState<number | null>(null);
 
   const gameStateRef = useRef({
     playerY: CANVAS_HEIGHT / 2 - PADDLE_HEIGHT / 2,
@@ -89,6 +94,7 @@ export default function PongGame() {
       state.ballVelX *= -1.1;
       const hitPos = (state.ballY - state.playerY) / PADDLE_HEIGHT - 0.5;
       state.ballVelY = hitPos * 10;
+      playSound('paddleHit');
     }
 
     // Ball collision with AI paddle
@@ -100,6 +106,7 @@ export default function PongGame() {
       state.ballVelX *= -1.1;
       const hitPos = (state.ballY - state.aiY) / PADDLE_HEIGHT - 0.5;
       state.ballVelY = hitPos * 10;
+      playSound('paddleHit');
     }
 
     // Score
@@ -108,6 +115,7 @@ export default function PongGame() {
         const newScore = prev + 1;
         if (newScore >= 10) {
           setGameOver(true);
+          playSound('gameOver');
         }
         return newScore;
       });
@@ -115,25 +123,45 @@ export default function PongGame() {
     } else if (state.ballX > CANVAS_WIDTH) {
       setPlayerScore(prev => {
         const newScore = prev + 1;
+        playSound('score');
         if (newScore >= 10) {
           setGameOver(true);
-          // Save score and check achievements
-          const achievements = checkAchievement('pong_score', newScore);
-          if (achievements) {
-            const achievement = getAchievements().find(a => a.id === achievements);
-            setUnlockedAchievement(achievement);
-          }
-          addToLeaderboard('pong', {
-            playerName: 'Player',
-            score: newScore,
-            date: new Date().toISOString(),
+          playSound('win');
+          // Save score and check achievements - need to get current aiScore
+          setAiScore(currentAiScore => {
+            const achievements = checkAchievement('pong_score', { score: newScore, aiScore: currentAiScore });
+            if (achievements) {
+              const achievement = getAchievements().find(a => a.id === achievements);
+              setUnlockedAchievement(achievement);
+            }
+            // Update progress for pong achievements
+            updateAchievementProgress('pong_pro', newScore, 10);
+            if (currentAiScore === 0) {
+              updateAchievementProgress('pong_perfect', newScore, 10);
+            }
+            // Show name prompt for score
+            setPendingScore(newScore);
+            setShowNamePrompt(true);
+            return currentAiScore;
           });
         }
         return newScore;
       });
       resetBall();
     }
-  }, [gameStarted, isPaused, gameOver]);
+  }, [gameStarted, isPaused, gameOver, playSound]);
+
+  const handleNameSubmit = (playerName: string) => {
+    if (pendingScore !== null) {
+      addToLeaderboard('pong', {
+        playerName,
+        score: pendingScore,
+        date: new Date().toISOString(),
+      });
+    }
+    setShowNamePrompt(false);
+    setPendingScore(null);
+  };
 
   const resetBall = () => {
     const state = gameStateRef.current;
@@ -224,6 +252,10 @@ export default function PongGame() {
       <AchievementToast
         achievement={unlockedAchievement}
         onClose={() => setUnlockedAchievement(null)}
+      />
+      <PlayerNamePrompt
+        isOpen={showNamePrompt}
+        onClose={handleNameSubmit}
       />
 
       <div className="container mx-auto max-w-5xl">

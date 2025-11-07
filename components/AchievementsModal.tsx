@@ -13,7 +13,10 @@ export default function AchievementsModal({ isOpen, onClose }: AchievementsModal
 
   useEffect(() => {
     if (isOpen) {
-      setAchievements(getAchievements());
+      // Force a fresh read from localStorage
+      const freshAchievements = getAchievements();
+      console.log('Loading achievements:', freshAchievements); // Debug log
+      setAchievements(freshAchievements);
     }
   }, [isOpen]);
 
@@ -78,7 +81,24 @@ export default function AchievementsModal({ isOpen, onClose }: AchievementsModal
                         </p>
                       )}
                       {!achievement.unlocked && (
-                        <p className="text-gray-600 text-xs mt-2">🔒 LOCKED</p>
+                        <>
+                          {achievement.progress !== undefined && achievement.maxProgress !== undefined ? (
+                            <div className="mt-2">
+                              <div className="flex justify-between text-xs mb-1">
+                                <span className="text-[#00ffff]">Progress</span>
+                                <span className="text-[#ffff00]">{achievement.progress}/{achievement.maxProgress}</span>
+                              </div>
+                              <div className="w-full bg-gray-800 h-2 border border-gray-700">
+                                <div
+                                  className="bg-gradient-to-r from-[#ff10f0] to-[#00ffff] h-full transition-all duration-300"
+                                  style={{ width: `${(achievement.progress / achievement.maxProgress) * 100}%` }}
+                                />
+                              </div>
+                            </div>
+                          ) : (
+                            <p className="text-gray-600 text-xs mt-2">🔒 LOCKED</p>
+                          )}
+                        </>
                       )}
                     </div>
                   </div>

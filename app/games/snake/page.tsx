@@ -2,9 +2,11 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { addToLeaderboard, trackGamePlayed, checkAchievement } from '@/lib/gameStats';
+import { addToLeaderboard, trackGamePlayed, checkAchievement, getPlayerName, updateAchievementProgress } from '@/lib/gameStats';
 import AchievementToast from '@/components/AchievementToast';
+import PlayerNamePrompt from '@/components/PlayerNamePrompt';
 import { getAchievements } from '@/lib/gameStats';
+import { useSound } from '@/components/SoundEffects';
 
 type Position = { x: number; y: number };
 type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
@@ -22,6 +24,7 @@ const DIFFICULTY_SETTINGS = {
 };
 
 export default function SnakeGame() {
+  const { playSound } = useSound();
   const [snake, setSnake] = useState<Position[]>(INITIAL_SNAKE);
   const [food, setFood] = useState<Position>({ x: 12, y: 12 });
   const [direction, setDirection] = useState<Direction>(INITIAL_DIRECTION);
@@ -33,6 +36,8 @@ export default function SnakeGame() {
   const [difficulty, setDifficulty] = useState<Difficulty>('medium');
   const [showDifficultySelect, setShowDifficultySelect] = useState(true);
   const [unlockedAchievement, setUnlockedAchievement] = useState<any>(null);
+  const [showNamePrompt, setShowNamePrompt] = useState(false);
+  const [pendingScore, setPendingScore] = useState<number | null>(null);
 
   const generateFood = useCallback((snakeBody: Position[]): Position => {
     let newFood: Position;
@@ -106,6 +111,7 @@ export default function SnakeGame() {
 
       if (checkCollision(newHead, prevSnake)) {
         setGameOver(true);
+        playSound('gameOver');
         return prevSnake;
       }
 
@@ -115,13 +121,14 @@ export default function SnakeGame() {
         const points = Math.floor(10 * DIFFICULTY_SETTINGS[difficulty].scoreMultiplier);
         setScore((prev) => prev + points);
         setFood(generateFood(newSnake));
+        playSound('eat');
       } else {
         newSnake.pop();
       }
 
       return newSnake;
     });
-  }, [nextDirection, food, gameOver, isPaused, gameStarted, generateFood, difficulty]);
+  }, [nextDirection, food, gameOver, isPaused, gameStarted, generateFood, difficulty, playSound]);
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -168,14 +175,30 @@ export default function SnakeGame() {
         const achievement = getAchievements().find(a => a.id === achievements);
         setUnlockedAchievement(achievement);
       }
+      // Update progress for score-based achievements
+      updateAchievementProgress('snake_master', score, 100);
+      updateAchievementProgress('snake_legend', score, 200);
+      if (difficulty === 'hard') {
+        checkAchievement('hard_mode_complete', '');
+      }
+      // Show name prompt for high scores
+      setPendingScore(score);
+      setShowNamePrompt(true);
+    }
+  }, [gameOver, score, difficulty]);
+
+  const handleNameSubmit = (playerName: string) => {
+    if (pendingScore !== null) {
       addToLeaderboard('snake', {
-        playerName: 'Player',
-        score: score,
+        playerName,
+        score: pendingScore,
         date: new Date().toISOString(),
         difficulty: difficulty,
       });
     }
-  }, [gameOver, score, difficulty]);
+    setShowNamePrompt(false);
+    setPendingScore(null);
+  };
 
   useEffect(() => {
     const gameSpeed = DIFFICULTY_SETTINGS[difficulty].speed;
@@ -188,6 +211,10 @@ export default function SnakeGame() {
       <AchievementToast
         achievement={unlockedAchievement}
         onClose={() => setUnlockedAchievement(null)}
+      />
+      <PlayerNamePrompt
+        isOpen={showNamePrompt}
+        onClose={handleNameSubmit}
       />
 
       <div className="container mx-auto max-w-4xl">
