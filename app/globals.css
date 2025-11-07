@@ -94,6 +94,37 @@ body {
   z-index: 1;
 }
 
+/* Screen shake animations */
+@keyframes shake-light {
+  0%, 100% { transform: translate(0, 0); }
+  10%, 30%, 50%, 70%, 90% { transform: translate(-2px, 2px); }
+  20%, 40%, 60%, 80% { transform: translate(2px, -2px); }
+}
+
+@keyframes shake-medium {
+  0%, 100% { transform: translate(0, 0); }
+  10%, 30%, 50%, 70%, 90% { transform: translate(-5px, 5px); }
+  20%, 40%, 60%, 80% { transform: translate(5px, -5px); }
+}
+
+@keyframes shake-heavy {
+  0%, 100% { transform: translate(0, 0); }
+  10%, 30%, 50%, 70%, 90% { transform: translate(-10px, 10px); }
+  20%, 40%, 60%, 80% { transform: translate(10px, -10px); }
+}
+
+.shake-light {
+  animation: shake-light 0.5s ease-in-out;
+}
+
+.shake-medium {
+  animation: shake-medium 0.5s ease-in-out;
+}
+
+.shake-heavy {
+  animation: shake-heavy 0.5s ease-in-out;
+}
+
 /* Retro button */
 .retro-btn {
   position: relative;

@@ -7,6 +7,7 @@ import AchievementToast from '@/components/AchievementToast';
 import PlayerNamePrompt from '@/components/PlayerNamePrompt';
 import { getAchievements } from '@/lib/gameStats';
 import { useSound } from '@/components/SoundEffects';
+import { useScreenShake } from '@/hooks/useScreenShake';
 
 interface Card {
   id: number;
@@ -27,6 +28,7 @@ const DIFFICULTY_SETTINGS = {
 
 export default function MemoryGame() {
   const { playSound } = useSound();
+  const { triggerShake } = useScreenShake();
   const [cards, setCards] = useState<Card[]>([]);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [moves, setMoves] = useState(0);
@@ -89,6 +91,7 @@ export default function MemoryGame() {
       setGameWon(true);
       setIsTimerRunning(false);
       playSound('win');
+      triggerShake('light');
 
       if (bestTime === null || timer < bestTime) {
         setBestTime(timer);
@@ -184,7 +187,7 @@ export default function MemoryGame() {
 
   if (!gameStarted) {
     return (
-      <div className="min-h-screen bg-[#0a0014] retro-grid scanlines flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[#0a0014] retro-grid scanlines flex items-center justify-center p-6 shake-container">
         <AchievementToast
           achievement={unlockedAchievement}
           onClose={() => setUnlockedAchievement(null)}
@@ -293,7 +296,7 @@ export default function MemoryGame() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0014] retro-grid scanlines flex items-center justify-center p-6">
+    <div className="min-h-screen bg-[#0a0014] retro-grid scanlines flex items-center justify-center p-6 shake-container">
       <AchievementToast
         achievement={unlockedAchievement}
         onClose={() => setUnlockedAchievement(null)}

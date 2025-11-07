@@ -10,17 +10,21 @@ import Navigation from '@/components/Navigation';
 import LoadingScreen from '@/components/LoadingScreen';
 import BackgroundParticles from '@/components/BackgroundParticles';
 import KonamiCode from '@/components/KonamiCode';
+import EasterEggs from '@/components/EasterEggs';
 import { SoundProvider } from '@/components/SoundEffects';
+import { CRTProvider } from '@/components/CRTEffect';
 import ScrollAnimation from '@/components/ScrollAnimation';
 import AchievementsModal from '@/components/AchievementsModal';
 import LeaderboardModal from '@/components/LeaderboardModal';
 import PlayerNamePrompt from '@/components/PlayerNamePrompt';
+import ShortcutsModal from '@/components/ShortcutsModal';
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState('hero');
   const [achievementsOpen, setAchievementsOpen] = useState(false);
   const [leaderboardOpen, setLeaderboardOpen] = useState(false);
   const [playerNameOpen, setPlayerNameOpen] = useState(false);
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,21 +45,25 @@ export default function Home() {
   }, []);
 
   return (
-    <SoundProvider>
-      <LoadingScreen />
-      <BackgroundParticles />
-      <KonamiCode />
-      <AchievementsModal isOpen={achievementsOpen} onClose={() => setAchievementsOpen(false)} />
-      <LeaderboardModal isOpen={leaderboardOpen} onClose={() => setLeaderboardOpen(false)} />
-      <PlayerNamePrompt isOpen={playerNameOpen} onClose={() => setPlayerNameOpen(false)} />
+    <CRTProvider>
+      <SoundProvider>
+        <LoadingScreen />
+        <BackgroundParticles />
+        <KonamiCode />
+        <EasterEggs />
+        <AchievementsModal isOpen={achievementsOpen} onClose={() => setAchievementsOpen(false)} />
+        <LeaderboardModal isOpen={leaderboardOpen} onClose={() => setLeaderboardOpen(false)} />
+        <PlayerNamePrompt isOpen={playerNameOpen} onClose={() => setPlayerNameOpen(false)} />
+        <ShortcutsModal isOpen={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
 
-      <div className="min-h-screen bg-[#0a0014] retro-grid scanlines relative">
-        <Navigation
-          activeSection={activeSection}
-          onOpenAchievements={() => setAchievementsOpen(true)}
-          onOpenLeaderboard={() => setLeaderboardOpen(true)}
-          onOpenPlayerName={() => setPlayerNameOpen(true)}
-        />
+        <div className="min-h-screen bg-[#0a0014] retro-grid scanlines relative crt-enabled">
+          <Navigation
+            activeSection={activeSection}
+            onOpenAchievements={() => setAchievementsOpen(true)}
+            onOpenLeaderboard={() => setLeaderboardOpen(true)}
+            onOpenPlayerName={() => setPlayerNameOpen(true)}
+            onOpenShortcuts={() => setShortcutsOpen(true)}
+          />
 
         <Hero />
 
@@ -76,5 +84,6 @@ export default function Home() {
         </ScrollAnimation>
       </div>
     </SoundProvider>
+  </CRTProvider>
   );
 }

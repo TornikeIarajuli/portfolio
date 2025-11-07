@@ -7,6 +7,7 @@ import AchievementToast from '@/components/AchievementToast';
 import PlayerNamePrompt from '@/components/PlayerNamePrompt';
 import { getAchievements } from '@/lib/gameStats';
 import { useSound } from '@/components/SoundEffects';
+import { useScreenShake } from '@/hooks/useScreenShake';
 
 const CANVAS_WIDTH = 800;
 const CANVAS_HEIGHT = 600;
@@ -18,6 +19,7 @@ const BALL_SPEED = 5;
 
 export default function PongGame() {
   const { playSound } = useSound();
+  const { triggerShake } = useScreenShake();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameOver, setGameOver] = useState(false);
@@ -116,6 +118,7 @@ export default function PongGame() {
         if (newScore >= 10) {
           setGameOver(true);
           playSound('gameOver');
+          triggerShake('heavy');
         }
         return newScore;
       });
@@ -127,6 +130,7 @@ export default function PongGame() {
         if (newScore >= 10) {
           setGameOver(true);
           playSound('win');
+          triggerShake('medium');
           // Save score and check achievements - need to get current aiScore
           setAiScore(currentAiScore => {
             const achievements = checkAchievement('pong_score', { score: newScore, aiScore: currentAiScore });
@@ -248,7 +252,7 @@ export default function PongGame() {
   }, [gameStarted, updateGame, draw]);
 
   return (
-    <div className="min-h-screen bg-[#0a0014] retro-grid scanlines flex items-center justify-center p-6">
+    <div className="min-h-screen bg-[#0a0014] retro-grid scanlines flex items-center justify-center p-6 shake-container">
       <AchievementToast
         achievement={unlockedAchievement}
         onClose={() => setUnlockedAchievement(null)}

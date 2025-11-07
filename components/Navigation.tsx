@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useSound } from '@/components/SoundEffects';
+import { useCRT } from '@/components/CRTEffect';
 import { useEffect, useState } from 'react';
 import { getPlayerName } from '@/lib/gameStats';
 
@@ -10,10 +11,12 @@ interface NavigationProps {
   onOpenAchievements?: () => void;
   onOpenLeaderboard?: () => void;
   onOpenPlayerName?: () => void;
+  onOpenShortcuts?: () => void;
 }
 
-export default function Navigation({ activeSection, onOpenAchievements, onOpenLeaderboard, onOpenPlayerName }: NavigationProps) {
+export default function Navigation({ activeSection, onOpenAchievements, onOpenLeaderboard, onOpenPlayerName, onOpenShortcuts }: NavigationProps) {
   const { isMuted, toggleMute } = useSound();
+  const { crtEnabled, toggleCRT } = useCRT();
   const [playerName, setPlayerNameState] = useState('Player');
 
   useEffect(() => {
@@ -52,6 +55,7 @@ export default function Navigation({ activeSection, onOpenAchievements, onOpenLe
     { id: 'tictactoe', label: 'TIC-TAC-TOE', icon: '❌' },
     { id: 'memory', label: 'MEMORY', icon: '🎴' },
     { id: 'pong', label: 'PONG', icon: '🏓' },
+    { id: 'spaceinvaders', label: 'SPACE INVADERS', icon: '👾' },
   ];
 
   return (
@@ -142,6 +146,30 @@ export default function Navigation({ activeSection, onOpenAchievements, onOpenLe
                 {isMuted ? '🔇' : '🔊'}
               </button>
             </li>
+
+            {/* CRT Effect toggle */}
+            <li>
+              <button
+                onClick={toggleCRT}
+                className="text-[#00ffff] hover:text-[#ff10f0] transition-all duration-200 flex items-center gap-1 font-bold tracking-wider text-sm border-2 border-[#00ffff] px-3 py-1 hover:border-[#ff10f0] cursor-pointer"
+                title={crtEnabled ? 'Disable CRT effect' : 'Enable CRT effect'}
+              >
+                {crtEnabled ? '📺' : '🖥️'}
+              </button>
+            </li>
+
+            {/* Shortcuts button */}
+            {onOpenShortcuts && (
+              <li>
+                <button
+                  onClick={onOpenShortcuts}
+                  className="text-[#ffff00] hover:text-[#ff10f0] transition-all duration-200 flex items-center gap-1 font-bold tracking-wider text-sm border-2 border-[#ffff00] px-3 py-1 hover:border-[#ff10f0] cursor-pointer"
+                  title="View keyboard shortcuts"
+                >
+                  ⌨️
+                </button>
+              </li>
+            )}
 
             {/* Player name button */}
             {onOpenPlayerName && (

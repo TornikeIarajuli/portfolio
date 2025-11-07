@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Achievement } from '@/lib/gameStats';
+import ConfettiEffect from './ConfettiEffect';
 
 interface AchievementToastProps {
   achievement: Achievement | null;
@@ -10,10 +11,12 @@ interface AchievementToastProps {
 
 export default function AchievementToast({ achievement, onClose }: AchievementToastProps) {
   const [isVisible, setIsVisible] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
     if (achievement) {
       setIsVisible(true);
+      setShowConfetti(true);
       const timer = setTimeout(() => {
         setIsVisible(false);
         setTimeout(onClose, 300);
@@ -26,12 +29,14 @@ export default function AchievementToast({ achievement, onClose }: AchievementTo
   if (!achievement) return null;
 
   return (
-    <div
-      className={`fixed top-0 left-0 right-0 transition-all duration-300 transform ${
-        isVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
-      }`}
-      style={{ zIndex: 9999 }}
-    >
+    <>
+      <ConfettiEffect trigger={showConfetti} onComplete={() => setShowConfetti(false)} />
+      <div
+        className={`fixed top-0 left-0 right-0 transition-all duration-300 transform ${
+          isVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
+        }`}
+        style={{ zIndex: 9999 }}
+      >
       <div className="container mx-auto px-6 py-4">
         <div className="flex justify-end">
           <div
@@ -61,5 +66,6 @@ export default function AchievementToast({ achievement, onClose }: AchievementTo
         </div>
       </div>
     </div>
+    </>
   );
 }

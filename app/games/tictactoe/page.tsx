@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useScreenShake } from '@/hooks/useScreenShake';
 
 type Player = 'X' | 'O' | null;
 type Board = Player[];
@@ -13,6 +14,7 @@ const WINNING_COMBINATIONS = [
 ];
 
 export default function TicTacToe() {
+  const { triggerShake } = useScreenShake();
   const [board, setBoard] = useState<Board>(Array(9).fill(null));
   const [currentPlayer, setCurrentPlayer] = useState<'X' | 'O'>('X');
   const [winner, setWinner] = useState<Player>(null);
@@ -81,12 +83,14 @@ export default function TicTacToe() {
       setWinner(result.winner);
       setWinningLine(result.line);
       setScores((prev) => ({ ...prev, [result.winner as 'X' | 'O']: prev[result.winner as 'X' | 'O'] + 1 }));
+      triggerShake('medium');
       return;
     }
 
     if (newBoard.every((cell) => cell !== null)) {
       setIsDraw(true);
       setScores((prev) => ({ ...prev, draws: prev.draws + 1 }));
+      triggerShake('light');
       return;
     }
 
@@ -106,12 +110,14 @@ export default function TicTacToe() {
           setWinner(aiResult.winner);
           setWinningLine(aiResult.line);
           setScores((prev) => ({ ...prev, O: prev.O + 1 }));
+          triggerShake('medium');
           return;
         }
 
         if (aiBoard.every((cell) => cell !== null)) {
           setIsDraw(true);
           setScores((prev) => ({ ...prev, draws: prev.draws + 1 }));
+          triggerShake('light');
           return;
         }
 
@@ -136,7 +142,7 @@ export default function TicTacToe() {
 
   if (!gameMode) {
     return (
-      <div className="min-h-screen bg-[#0a0014] retro-grid scanlines flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[#0a0014] retro-grid scanlines flex items-center justify-center p-6 shake-container">
         <div className="container mx-auto max-w-2xl">
           <Link
             href="/"
@@ -176,7 +182,7 @@ export default function TicTacToe() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0014] retro-grid scanlines flex items-center justify-center p-6">
+    <div className="min-h-screen bg-[#0a0014] retro-grid scanlines flex items-center justify-center p-6 shake-container">
       <div className="container mx-auto max-w-4xl">
         <Link
           href="/"

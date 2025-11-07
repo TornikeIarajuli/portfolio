@@ -5,8 +5,10 @@ import Link from 'next/link';
 import { addToLeaderboard, trackGamePlayed, checkAchievement, getPlayerName, updateAchievementProgress } from '@/lib/gameStats';
 import AchievementToast from '@/components/AchievementToast';
 import PlayerNamePrompt from '@/components/PlayerNamePrompt';
+import GameInstructions from '@/components/GameInstructions';
 import { getAchievements } from '@/lib/gameStats';
 import { useSound } from '@/components/SoundEffects';
+import { useScreenShake } from '@/hooks/useScreenShake';
 
 type Position = { x: number; y: number };
 type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
@@ -25,6 +27,7 @@ const DIFFICULTY_SETTINGS = {
 
 export default function SnakeGame() {
   const { playSound } = useSound();
+  const { triggerShake } = useScreenShake();
   const [snake, setSnake] = useState<Position[]>(INITIAL_SNAKE);
   const [food, setFood] = useState<Position>({ x: 12, y: 12 });
   const [direction, setDirection] = useState<Direction>(INITIAL_DIRECTION);
@@ -38,6 +41,7 @@ export default function SnakeGame() {
   const [unlockedAchievement, setUnlockedAchievement] = useState<any>(null);
   const [showNamePrompt, setShowNamePrompt] = useState(false);
   const [pendingScore, setPendingScore] = useState<number | null>(null);
+  const [showInstructions, setShowInstructions] = useState(true);
 
   const generateFood = useCallback((snakeBody: Position[]): Position => {
     let newFood: Position;
@@ -112,6 +116,7 @@ export default function SnakeGame() {
       if (checkCollision(newHead, prevSnake)) {
         setGameOver(true);
         playSound('gameOver');
+        triggerShake('heavy');
         return prevSnake;
       }
 
@@ -207,7 +212,7 @@ export default function SnakeGame() {
   }, [moveSnake, difficulty]);
 
   return (
-    <div className="min-h-screen bg-[#0a0014] retro-grid scanlines flex items-center justify-center p-6">
+    <div className="min-h-screen bg-[#0a0014] retro-grid scanlines flex items-center justify-center p-6 shake-container">
       <AchievementToast
         achievement={unlockedAchievement}
         onClose={() => setUnlockedAchievement(null)}
@@ -216,6 +221,20 @@ export default function SnakeGame() {
         isOpen={showNamePrompt}
         onClose={handleNameSubmit}
       />
+      {showInstructions && (
+        <GameInstructions
+          gameName="SNAKE ARCADE"
+          instructions={[
+            'Use ARROW KEYS to control the snake direction',
+            'Eat the food (glowing squares) to grow longer and earn points',
+            'Avoid hitting the walls or your own tail',
+            'Press SPACE to pause/resume the game',
+            'Select difficulty: Easy (200ms), Medium (150ms), or Hard (100ms)',
+            'Higher difficulty = higher score multiplier!',
+          ]}
+          onClose={() => setShowInstructions(false)}
+        />
+      )}
 
       <div className="container mx-auto max-w-4xl">
         {/* Retro back button */}
