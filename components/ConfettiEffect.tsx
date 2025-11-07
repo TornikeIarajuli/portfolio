@@ -23,6 +23,7 @@ const COLORS = ['#ff10f0', '#00ffff', '#ffff00', '#39ff14', '#b000ff'];
 
 export default function ConfettiEffect({ trigger, onComplete }: ConfettiEffectProps) {
   const [particles, setParticles] = useState<Particle[]>([]);
+  const [opacity, setOpacity] = useState(1);
 
   useEffect(() => {
     if (!trigger) return;
@@ -43,6 +44,7 @@ export default function ConfettiEffect({ trigger, onComplete }: ConfettiEffectPr
       });
     }
     setParticles(newParticles);
+    setOpacity(1);
 
     // Animate particles
     const animationFrames = 120;
@@ -60,6 +62,8 @@ export default function ConfettiEffect({ trigger, onComplete }: ConfettiEffectPr
           rotation: particle.rotation + particle.rotationSpeed,
         }))
       );
+
+      setOpacity(Math.max(0, 1 - frame / 120));
 
       if (frame < animationFrames) {
         requestAnimationFrame(animate);
@@ -89,7 +93,7 @@ export default function ConfettiEffect({ trigger, onComplete }: ConfettiEffectPr
             transform: `rotate(${particle.rotation}deg)`,
             boxShadow: `0 0 10px ${particle.color}`,
             transition: 'opacity 0.3s',
-            opacity: Math.max(0, 1 - frame / 120),
+            opacity: opacity,
           }}
         />
       ))}
