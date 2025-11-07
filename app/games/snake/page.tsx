@@ -192,8 +192,8 @@ export default function SnakeGame() {
     }
   }, [gameOver, score, difficulty]);
 
-  const handleNameSubmit = (playerName: string) => {
-    if (pendingScore !== null) {
+  const handleNameSubmit = (playerName?: string) => {
+    if (pendingScore !== null && playerName) {
       addToLeaderboard('snake', {
         playerName,
         score: pendingScore,
