@@ -25,6 +25,9 @@ export default function EasterEggs() {
   // Secret code detection
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
+      // Safety check for e.key
+      if (!e.key) return;
+
       setKeys((prevKeys) => {
         const newKeys = [...prevKeys, e.key.toLowerCase()].slice(-10);
 

@@ -24,6 +24,16 @@ export default function Contact() {
     e.preventDefault();
     setIsSubmitting(true);
 
+    // Check if access key is configured
+    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
+    if (!accessKey || accessKey === 'your_access_key_here') {
+      console.error('Web3Forms access key is not configured. Please add NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY to your .env.local file');
+      setSubmitStatus('error');
+      setIsSubmitting(false);
+      setTimeout(() => setSubmitStatus('idle'), 5000);
+      return;
+    }
+
     try {
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
@@ -31,7 +41,7 @@ export default function Contact() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          access_key: 'YOUR_WEB3FORMS_ACCESS_KEY', // Replace with your Web3Forms access key from https://web3forms.com
+          access_key: accessKey,
           name: formData.name,
           email: formData.email,
           subject: formData.subject,
@@ -39,17 +49,21 @@ export default function Contact() {
         }),
       });
 
-      if (response.ok) {
+      const result = await response.json();
+
+      if (response.ok && result.success) {
         setSubmitStatus('success');
         setFormData({ name: '', email: '', subject: '', message: '' });
       } else {
+        console.error('Web3Forms error:', result);
         setSubmitStatus('error');
       }
     } catch (error) {
+      console.error('Form submission error:', error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
-      setTimeout(() => setSubmitStatus('idle'), 3000);
+      setTimeout(() => setSubmitStatus('idle'), 5000);
     }
   };
 
@@ -223,7 +237,10 @@ export default function Contact() {
                   ✗ ERROR! GAME OVER ✗
                 </p>
                 <p className="text-[#00ffff] text-sm font-mono mt-2">
-                  Please try again or email me directly
+                  {!process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY === 'your_access_key_here'
+                    ? 'Email service not configured. Please email me directly at tornikeiarajuli@gmail.com'
+                    : 'Please try again or email me directly at tornikeiarajuli@gmail.com'
+                  }
                 </p>
               </div>
             )}
