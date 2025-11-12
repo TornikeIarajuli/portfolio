@@ -473,11 +473,40 @@ export default function SpaceInvadersGame() {
               </button>
             </div>
 
+            {/* Mobile Touch Controls */}
+            <div className="md:hidden mt-6 flex justify-center gap-4">
+              <button
+                onTouchStart={() => { gameStateRef.current.keys['ArrowLeft'] = true; }}
+                onTouchEnd={() => { gameStateRef.current.keys['ArrowLeft'] = false; }}
+                className="w-20 h-20 bg-black border-4 border-[#00ffff] text-[#00ffff] text-3xl font-bold active:bg-[#00ffff] active:text-black transition-all"
+                disabled={!gameStarted || gameOver || isPaused}
+              >
+                ◀
+              </button>
+              <button
+                onTouchStart={() => { gameStateRef.current.keys[' '] = true; }}
+                onTouchEnd={() => { gameStateRef.current.keys[' '] = false; }}
+                className="w-20 h-20 bg-black border-4 border-[#ffff00] text-[#ffff00] text-2xl font-bold active:bg-[#ffff00] active:text-black transition-all"
+                disabled={!gameStarted || gameOver || isPaused}
+              >
+                🔫
+              </button>
+              <button
+                onTouchStart={() => { gameStateRef.current.keys['ArrowRight'] = true; }}
+                onTouchEnd={() => { gameStateRef.current.keys['ArrowRight'] = false; }}
+                className="w-20 h-20 bg-black border-4 border-[#00ffff] text-[#00ffff] text-3xl font-bold active:bg-[#00ffff] active:text-black transition-all"
+                disabled={!gameStarted || gameOver || isPaused}
+              >
+                ▶
+              </button>
+            </div>
+
             <div className="border-t-2 border-[#ff10f0]/30 pt-4 mt-4">
               <div className="text-[#00ffff] text-xs tracking-wider space-y-1 font-mono">
-                <p>🎮 USE ◀ ▶ ARROW KEYS TO MOVE</p>
-                <p>🔫 PRESS SPACE TO SHOOT</p>
-                <p>⏸ PRESS P TO PAUSE/RESUME</p>
+                <p className="hidden md:block">🎮 USE ◀ ▶ ARROW KEYS TO MOVE</p>
+                <p className="hidden md:block">🔫 PRESS SPACE TO SHOOT</p>
+                <p className="hidden md:block">⏸ PRESS P TO PAUSE/RESUME</p>
+                <p className="md:hidden">🎮 TAP BUTTONS TO CONTROL SHIP</p>
                 <p>👾 DESTROY ALL INVADERS TO ADVANCE TO NEXT WAVE</p>
               </div>
             </div>

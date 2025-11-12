@@ -18,6 +18,8 @@ export default function Navigation({ activeSection, onOpenAchievements, onOpenLe
   const { isMuted, toggleMute } = useSound();
   const { crtEnabled, toggleCRT } = useCRT();
   const [playerName, setPlayerNameState] = useState('Player');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showGamesDropdown, setShowGamesDropdown] = useState(false);
 
   useEffect(() => {
     setPlayerNameState(getPlayerName());
@@ -40,6 +42,7 @@ export default function Navigation({ activeSection, onOpenAchievements, onOpenLe
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     element?.scrollIntoView({ behavior: 'smooth' });
+    setIsMobileMenuOpen(false); // Close mobile menu after navigation
   };
 
   const navItems = [
@@ -60,14 +63,15 @@ export default function Navigation({ activeSection, onOpenAchievements, onOpenLe
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-black/90 border-b-4 border-[#ff10f0] neon-border backdrop-blur-sm">
-      <div className="container mx-auto px-6 py-4">
+      <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
         <div className="flex justify-between items-center">
           {/* Arcade-style logo */}
-          <h1 className="text-2xl font-bold neon-text-yellow text-[#ffff00] tracking-widest pixel-corners bg-black px-4 py-2 border-2 border-[#ffff00]">
+          <h1 className="text-xl sm:text-2xl font-bold neon-text-yellow text-[#ffff00] tracking-widest pixel-corners bg-black px-3 sm:px-4 py-2 border-2 border-[#ffff00]">
             TI
           </h1>
 
-          <ul className="flex gap-6 items-center">
+          {/* Desktop Navigation */}
+          <ul className="hidden lg:flex gap-6 items-center">
             {navItems.map((item) => (
               <li key={item.id}>
                 <button
@@ -183,6 +187,153 @@ export default function Navigation({ activeSection, onOpenAchievements, onOpenLe
                 </button>
               </li>
             )}
+          </ul>
+
+          {/* Mobile Hamburger Button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="lg:hidden text-[#ff10f0] hover:text-[#00ffff] transition-all duration-200 border-2 border-[#ff10f0] hover:border-[#00ffff] px-3 py-2 cursor-pointer"
+            aria-label="Toggle menu"
+          >
+            <div className="w-6 h-5 flex flex-col justify-between">
+              <span className={`block h-1 bg-current transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+              <span className={`block h-1 bg-current transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
+              <span className={`block h-1 bg-current transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+            </div>
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        <div
+          className={`lg:hidden overflow-hidden transition-all duration-300 ${
+            isMobileMenuOpen ? 'max-h-[600px] opacity-100 mt-4' : 'max-h-0 opacity-0'
+          }`}
+        >
+          <ul className="flex flex-col gap-3 pb-4">
+            {/* Navigation Items */}
+            {navItems.map((item) => (
+              <li key={item.id}>
+                <button
+                  onClick={() => scrollToSection(item.id)}
+                  className={`w-full text-left transition-all duration-200 font-bold tracking-wider text-sm px-4 py-3 border-2 cursor-pointer ${
+                    activeSection === item.id
+                      ? 'text-[#ff10f0] neon-text border-[#ff10f0] bg-[#ff10f0]/10'
+                      : 'text-[#00ffff] hover:text-[#ff10f0] border-[#00ffff] hover:border-[#ff10f0]'
+                  }`}
+                >
+                  {activeSection === item.id ? '▶ ' : ''}{item.label}
+                </button>
+              </li>
+            ))}
+
+            {/* Games Section */}
+            <li>
+              <button
+                onClick={() => setShowGamesDropdown(!showGamesDropdown)}
+                className="w-full text-left text-[#39ff14] hover:text-[#ffff00] transition-all duration-200 flex items-center justify-between font-bold tracking-wider text-sm border-2 border-[#39ff14] px-4 py-3 hover:border-[#ffff00] cursor-pointer"
+              >
+                <span>🎮 GAMES</span>
+                <svg
+                  className={`w-4 h-4 transition-transform duration-200 ${showGamesDropdown ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* Mobile Games Dropdown */}
+              {showGamesDropdown && (
+                <div className="mt-2 ml-4 border-l-4 border-[#ff10f0]">
+                  {games.map((game) => (
+                    <Link
+                      key={game.id}
+                      href={`/games/${game.id}`}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block px-4 py-3 text-[#00ffff] hover:bg-[#ff10f0] hover:text-black transition-all duration-200 font-bold tracking-wide border-b-2 border-[#ff10f0]/30 last:border-b-0"
+                    >
+                      <span className="inline-block mr-2">{game.icon}</span>
+                      <span>▸ {game.label}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </li>
+
+            {/* Utility Buttons Row 1 */}
+            <li className="grid grid-cols-2 gap-3 mt-2">
+              {onOpenAchievements && (
+                <button
+                  onClick={() => {
+                    onOpenAchievements();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="text-[#ffff00] hover:text-[#ff10f0] transition-all duration-200 flex items-center justify-center gap-1 font-bold tracking-wider text-sm border-2 border-[#ffff00] px-3 py-3 hover:border-[#ff10f0] cursor-pointer"
+                >
+                  🏆 TROPHIES
+                </button>
+              )}
+
+              {onOpenLeaderboard && (
+                <button
+                  onClick={() => {
+                    onOpenLeaderboard();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="text-[#00ffff] hover:text-[#ff10f0] transition-all duration-200 flex items-center justify-center gap-1 font-bold tracking-wider text-sm border-2 border-[#00ffff] px-3 py-3 hover:border-[#ff10f0] cursor-pointer"
+                >
+                  📊 RANKS
+                </button>
+              )}
+            </li>
+
+            {/* Utility Buttons Row 2 */}
+            <li className="grid grid-cols-4 gap-2">
+              <button
+                onClick={toggleMute}
+                className="text-[#ff10f0] hover:text-[#ffff00] transition-all duration-200 flex items-center justify-center font-bold text-lg border-2 border-[#ff10f0] px-3 py-3 hover:border-[#ffff00] cursor-pointer"
+                title={isMuted ? 'Unmute sounds' : 'Mute sounds'}
+              >
+                {isMuted ? '🔇' : '🔊'}
+              </button>
+
+              <button
+                onClick={toggleCRT}
+                className="text-[#00ffff] hover:text-[#ff10f0] transition-all duration-200 flex items-center justify-center font-bold text-lg border-2 border-[#00ffff] px-3 py-3 hover:border-[#ff10f0] cursor-pointer"
+                title={crtEnabled ? 'Disable CRT effect' : 'Enable CRT effect'}
+              >
+                {crtEnabled ? '📺' : '🖥️'}
+              </button>
+
+              {onOpenShortcuts && (
+                <button
+                  onClick={() => {
+                    onOpenShortcuts();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="text-[#ffff00] hover:text-[#ff10f0] transition-all duration-200 flex items-center justify-center font-bold text-lg border-2 border-[#ffff00] px-3 py-3 hover:border-[#ff10f0] cursor-pointer"
+                  title="View keyboard shortcuts"
+                >
+                  ⌨️
+                </button>
+              )}
+
+              {onOpenPlayerName && (
+                <button
+                  onClick={() => {
+                    onOpenPlayerName();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="text-[#39ff14] hover:text-[#ff10f0] transition-all duration-200 flex items-center justify-center font-bold text-lg border-2 border-[#39ff14] px-3 py-3 hover:border-[#ff10f0] cursor-pointer col-span-4"
+                  title="Change player name"
+                >
+                  <span className="flex items-center gap-2">
+                    👤 <span className="text-sm tracking-wider">{playerName}</span>
+                  </span>
+                </button>
+              )}
+            </li>
           </ul>
         </div>
       </div>
