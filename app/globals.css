@@ -1,12 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --neon-pink: #ff10f0;
-  --neon-cyan: #00ffff;
-  --neon-yellow: #ffff00;
+  /* Theme colors - can be overridden by ThemeContext */
+  --color-primary: #ff10f0;
+  --color-secondary: #00ffff;
+  --color-accent: #ffff00;
+  --color-background: #000000;
+  --color-text: #ffffff;
+
+  /* Legacy color names (for backwards compatibility) */
+  --neon-pink: var(--color-primary);
+  --neon-cyan: var(--color-secondary);
+  --neon-yellow: var(--color-accent);
   --neon-purple: #b000ff;
   --neon-green: #39ff14;
-  --dark-bg: #0a0014;
+  --dark-bg: var(--color-background);
   --grid-color: #ff10f033;
 }
 
@@ -16,9 +24,10 @@
 }
 
 body {
-  background: var(--dark-bg);
-  color: #ffffff;
+  background: var(--color-background);
+  color: var(--color-text);
   font-family: 'Courier New', monospace;
+  transition: background-color 0.3s ease, color 0.3s ease;
   /* Retro pixelated crosshair cursor */
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect x="10" y="2" width="4" height="8" fill="%23ff10f0"/><rect x="10" y="14" width="4" height="8" fill="%23ff10f0"/><rect x="2" y="10" width="8" height="4" fill="%23ff10f0"/><rect x="14" y="10" width="8" height="4" fill="%23ff10f0"/><rect x="10" y="10" width="4" height="4" fill="%2300ffff"/></svg>') 12 12, auto;
 }
@@ -26,6 +35,91 @@ body {
 /* Retro pixelated pointer for interactive elements */
 a, button, input, textarea, select, .clickable {
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><rect x="4" y="4" width="4" height="4" fill="%23ff10f0"/><rect x="4" y="8" width="4" height="4" fill="%23ff10f0"/><rect x="4" y="12" width="4" height="4" fill="%23ff10f0"/><rect x="4" y="16" width="4" height="4" fill="%23ff10f0"/><rect x="8" y="8" width="4" height="4" fill="%23ff10f0"/><rect x="8" y="12" width="4" height="4" fill="%23ff10f0"/><rect x="8" y="16" width="4" height="4" fill="%23ff10f0"/><rect x="8" y="20" width="4" height="4" fill="%23ff10f0"/><rect x="12" y="12" width="4" height="4" fill="%23ff10f0"/><rect x="12" y="16" width="4" height="4" fill="%23ff10f0"/><rect x="16" y="16" width="4" height="4" fill="%23ff10f0"/><rect x="12" y="20" width="4" height="4" fill="%2300ffff"/></svg>') 4 4, pointer !important;
+}
+
+/* ========================================
+   CUSTOM CURSOR STYLES
+   ======================================== */
+
+/* Pixel Sword Cursor */
+body.cursor-pixel-sword {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><rect x="14" y="4" width="4" height="4" fill="%23c0c0c0"/><rect x="14" y="8" width="4" height="4" fill="%23e0e0e0"/><rect x="14" y="12" width="4" height="4" fill="%23c0c0c0"/><rect x="14" y="16" width="4" height="4" fill="%23a0a0a0"/><rect x="10" y="20" width="12" height="4" fill="%23ffd700"/><rect x="14" y="24" width="4" height="4" fill="%238b4513"/><rect x="14" y="28" width="4" height="2" fill="%236b3410"/></svg>') 16 16, auto;
+}
+
+body.cursor-pixel-sword a,
+body.cursor-pixel-sword button,
+body.cursor-pixel-sword input,
+body.cursor-pixel-sword textarea,
+body.cursor-pixel-sword select,
+body.cursor-pixel-sword .clickable {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><rect x="14" y="4" width="4" height="4" fill="%23c0c0c0"/><rect x="14" y="8" width="4" height="4" fill="%23e0e0e0"/><rect x="14" y="12" width="4" height="4" fill="%23c0c0c0"/><rect x="14" y="16" width="4" height="4" fill="%23a0a0a0"/><rect x="10" y="20" width="12" height="4" fill="%23ffd700"/><rect x="14" y="24" width="4" height="4" fill="%238b4513"/><rect x="14" y="28" width="4" height="2" fill="%236b3410"/></svg>') 16 16, pointer !important;
+}
+
+/* Retro Hand Cursor */
+body.cursor-retro-hand {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect x="8" y="4" width="4" height="12" fill="%23ffcc99"/><rect x="12" y="4" width="4" height="8" fill="%23ffcc99"/><rect x="4" y="8" width="4" height="8" fill="%23ffcc99"/><rect x="16" y="8" width="4" height="4" fill="%23ffcc99"/><rect x="8" y="16" width="8" height="4" fill="%23ffcc99"/><rect x="6" y="12" width="2" height="2" fill="%23000"/></svg>') 12 12, auto;
+}
+
+body.cursor-retro-hand a,
+body.cursor-retro-hand button,
+body.cursor-retro-hand input,
+body.cursor-retro-hand textarea,
+body.cursor-retro-hand select,
+body.cursor-retro-hand .clickable {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect x="8" y="4" width="4" height="12" fill="%23ffcc99"/><rect x="12" y="4" width="4" height="8" fill="%23ffcc99"/><rect x="4" y="8" width="4" height="8" fill="%23ffcc99"/><rect x="16" y="8" width="4" height="4" fill="%23ffcc99"/><rect x="8" y="16" width="8" height="4" fill="%23ffcc99"/><rect x="6" y="12" width="2" height="2" fill="%23000"/></svg>') 12 12, pointer !important;
+}
+
+/* Neon Circle Cursor */
+body.cursor-neon-circle {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="10" fill="none" stroke="%2300ffff" stroke-width="3"/><circle cx="14" cy="14" r="4" fill="%2300ffff"/></svg>') 14 14, auto;
+}
+
+body.cursor-neon-circle a,
+body.cursor-neon-circle button,
+body.cursor-neon-circle input,
+body.cursor-neon-circle textarea,
+body.cursor-neon-circle select,
+body.cursor-neon-circle .clickable {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="10" fill="none" stroke="%23ff10f0" stroke-width="3"/><circle cx="14" cy="14" r="4" fill="%23ff10f0"/></svg>') 14 14, pointer !important;
+}
+
+/* Star Cursor */
+body.cursor-star-cursor {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><polygon points="14,2 17,11 27,11 19,17 22,26 14,20 6,26 9,17 1,11 11,11" fill="%23ffff00" stroke="%23ffd700" stroke-width="1"/></svg>') 14 14, auto;
+}
+
+body.cursor-star-cursor a,
+body.cursor-star-cursor button,
+body.cursor-star-cursor input,
+body.cursor-star-cursor textarea,
+body.cursor-star-cursor select,
+body.cursor-star-cursor .clickable {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><polygon points="14,2 17,11 27,11 19,17 22,26 14,20 6,26 9,17 1,11 11,11" fill="%23ffff00" stroke="%23ffd700" stroke-width="1"/></svg>') 14 14, pointer !important;
+}
+
+/* Name color styles */
+:root {
+  --player-name-color: #ffffff;
+}
+
+.player-name {
+  color: var(--player-name-color);
+  transition: color 0.3s ease;
+}
+
+/* Rainbow name animation */
+@keyframes rainbow-text {
+  0% { color: #ff0000; }
+  16% { color: #ff8800; }
+  33% { color: #ffff00; }
+  50% { color: #00ff00; }
+  66% { color: #0088ff; }
+  83% { color: #8800ff; }
+  100% { color: #ff0000; }
+}
+
+.rainbow-name .player-name {
+  animation: rainbow-text 3s linear infinite;
 }
 
 /* Retro grid background */

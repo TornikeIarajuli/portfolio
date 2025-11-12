@@ -8,6 +8,7 @@ import PlayerNamePrompt from '@/components/PlayerNamePrompt';
 import { getAchievements } from '@/lib/gameStats';
 import { useSound } from '@/components/SoundEffects';
 import { useScreenShake } from '@/hooks/useScreenShake';
+import { awardCoins, COIN_REWARDS } from '@/lib/coinSystem';
 
 interface Card {
   id: number;
@@ -98,6 +99,29 @@ export default function MemoryGame() {
       }
       if (bestMoves === null || moves < bestMoves) {
         setBestMoves(moves);
+      }
+
+      // Award coins based on performance
+      const pairCountTotal = pairCount;
+      const minPossibleMoves = pairCountTotal;
+      let coinsEarned = 0;
+
+      if (moves === minPossibleMoves) {
+        // Perfect game - matched all pairs without mistakes
+        coinsEarned = COIN_REWARDS.PERFECT_GAME; // 5 coins
+      } else if (moves <= minPossibleMoves * 1.2) {
+        // Very good performance (20% over minimum)
+        coinsEarned = COIN_REWARDS.BEAT_PERSONAL_BEST; // 3 coins
+      } else if (moves <= minPossibleMoves * 1.5) {
+        // Good performance (50% over minimum)
+        coinsEarned = COIN_REWARDS.HIGH_SCORE; // 2 coins
+      } else {
+        // Completed the game
+        coinsEarned = COIN_REWARDS.GAME_COMPLETED; // 1 coin
+      }
+
+      if (coinsEarned > 0) {
+        awardCoins(coinsEarned);
       }
 
       // Check achievements and save to leaderboard

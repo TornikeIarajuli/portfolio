@@ -5,6 +5,8 @@ import { useSound } from '@/components/SoundEffects';
 import { useCRT } from '@/components/CRTEffect';
 import { useEffect, useState } from 'react';
 import { getPlayerName } from '@/lib/gameStats';
+import ThemeSelectorInline from '@/components/ThemeSelectorInline';
+import { useBackgroundMusic } from '@/components/BackgroundMusic';
 
 interface NavigationProps {
   activeSection: string;
@@ -17,6 +19,7 @@ interface NavigationProps {
 export default function Navigation({ activeSection, onOpenAchievements, onOpenLeaderboard, onOpenPlayerName, onOpenShortcuts }: NavigationProps) {
   const { isMuted, toggleMute } = useSound();
   const { crtEnabled, toggleCRT } = useCRT();
+  const { isMusicMuted, toggleMusic } = useBackgroundMusic();
   const [playerName, setPlayerNameState] = useState('Player');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showGamesDropdown, setShowGamesDropdown] = useState(false);
@@ -88,6 +91,16 @@ export default function Navigation({ activeSection, onOpenAchievements, onOpenLe
                 </button>
               </li>
             ))}
+
+            {/* Shop Link */}
+            <li>
+              <Link
+                href="/shop"
+                className="text-[#ffff00] hover:text-[#ff10f0] transition-all duration-200 flex items-center gap-1 font-bold tracking-wider text-sm border-2 border-[#ffff00] px-3 py-1 hover:border-[#ff10f0]"
+              >
+                🏪 SHOP
+              </Link>
+            </li>
 
             {/* Arcade Games dropdown */}
             <li className="relative group">
@@ -178,40 +191,30 @@ export default function Navigation({ activeSection, onOpenAchievements, onOpenLe
               </li>
             )}
 
-            {/* Sound toggle button */}
+            {/* Theme Selector */}
+            <ThemeSelectorInline />
+
+            {/* Music toggle button */}
+            <li>
+              <button
+                onClick={toggleMusic}
+                className="text-[#39ff14] hover:text-[#ffff00] transition-all duration-200 flex items-center gap-1 font-bold tracking-wider text-sm border-2 border-[#39ff14] px-3 py-1 hover:border-[#ffff00] cursor-pointer"
+                title={isMusicMuted ? 'Unmute music' : 'Mute music'}
+              >
+                {isMusicMuted ? '🎵' : '🎶'}
+              </button>
+            </li>
+
+            {/* Sound FX toggle button */}
             <li>
               <button
                 onClick={toggleMute}
                 className="text-[#ff10f0] hover:text-[#ffff00] transition-all duration-200 flex items-center gap-1 font-bold tracking-wider text-sm border-2 border-[#ff10f0] px-3 py-1 hover:border-[#ffff00] cursor-pointer"
-                title={isMuted ? 'Unmute sounds' : 'Mute sounds'}
+                title={isMuted ? 'Unmute sound effects' : 'Mute sound effects'}
               >
                 {isMuted ? '🔇' : '🔊'}
               </button>
             </li>
-
-            {/* CRT Effect toggle */}
-            <li>
-              <button
-                onClick={toggleCRT}
-                className="text-[#00ffff] hover:text-[#ff10f0] transition-all duration-200 flex items-center gap-1 font-bold tracking-wider text-sm border-2 border-[#00ffff] px-3 py-1 hover:border-[#ff10f0] cursor-pointer"
-                title={crtEnabled ? 'Disable CRT effect' : 'Enable CRT effect'}
-              >
-                {crtEnabled ? '📺' : '🖥️'}
-              </button>
-            </li>
-
-            {/* Shortcuts button */}
-            {onOpenShortcuts && (
-              <li>
-                <button
-                  onClick={onOpenShortcuts}
-                  className="text-[#ffff00] hover:text-[#ff10f0] transition-all duration-200 flex items-center gap-1 font-bold tracking-wider text-sm border-2 border-[#ffff00] px-3 py-1 hover:border-[#ff10f0] cursor-pointer"
-                  title="View keyboard shortcuts"
-                >
-                  ⌨️
-                </button>
-              </li>
-            )}
 
             {/* Player name button */}
             {onOpenPlayerName && (
@@ -221,7 +224,7 @@ export default function Navigation({ activeSection, onOpenAchievements, onOpenLe
                   className="text-[#39ff14] hover:text-[#ff10f0] transition-all duration-200 flex items-center gap-1 font-bold tracking-wider text-sm border-2 border-[#39ff14] px-3 py-1 hover:border-[#ff10f0] cursor-pointer"
                   title="Change player name"
                 >
-                  👤 {playerName}
+                  👤 <span className="player-name">{playerName}</span>
                 </button>
               </li>
             )}
@@ -264,6 +267,17 @@ export default function Navigation({ activeSection, onOpenAchievements, onOpenLe
                 </button>
               </li>
             ))}
+
+            {/* Shop Link - Mobile */}
+            <li>
+              <Link
+                href="/shop"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block w-full text-left text-[#ffff00] hover:text-[#ff10f0] transition-all duration-200 font-bold tracking-wider text-sm border-2 border-[#ffff00] px-4 py-3 hover:border-[#ff10f0]"
+              >
+                🏪 SHOP
+              </Link>
+            </li>
 
             {/* Games Section */}
             <li>
@@ -352,51 +366,41 @@ export default function Navigation({ activeSection, onOpenAchievements, onOpenLe
             </li>
 
             {/* Utility Buttons Row 2 */}
-            <li className="grid grid-cols-4 gap-2">
+            <li className="grid grid-cols-2 gap-2">
+              <button
+                onClick={toggleMusic}
+                className="text-[#39ff14] hover:text-[#ffff00] transition-all duration-200 flex items-center justify-center font-bold text-lg border-2 border-[#39ff14] px-3 py-3 hover:border-[#ffff00] cursor-pointer"
+                title={isMusicMuted ? 'Unmute music' : 'Mute music'}
+              >
+                {isMusicMuted ? '🎵' : '🎶'}
+              </button>
+
               <button
                 onClick={toggleMute}
                 className="text-[#ff10f0] hover:text-[#ffff00] transition-all duration-200 flex items-center justify-center font-bold text-lg border-2 border-[#ff10f0] px-3 py-3 hover:border-[#ffff00] cursor-pointer"
-                title={isMuted ? 'Unmute sounds' : 'Mute sounds'}
+                title={isMuted ? 'Unmute sound FX' : 'Mute sound FX'}
               >
                 {isMuted ? '🔇' : '🔊'}
               </button>
+            </li>
 
-              <button
-                onClick={toggleCRT}
-                className="text-[#00ffff] hover:text-[#ff10f0] transition-all duration-200 flex items-center justify-center font-bold text-lg border-2 border-[#00ffff] px-3 py-3 hover:border-[#ff10f0] cursor-pointer"
-                title={crtEnabled ? 'Disable CRT effect' : 'Enable CRT effect'}
-              >
-                {crtEnabled ? '📺' : '🖥️'}
-              </button>
-
-              {onOpenShortcuts && (
-                <button
-                  onClick={() => {
-                    onOpenShortcuts();
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="text-[#ffff00] hover:text-[#ff10f0] transition-all duration-200 flex items-center justify-center font-bold text-lg border-2 border-[#ffff00] px-3 py-3 hover:border-[#ff10f0] cursor-pointer"
-                  title="View keyboard shortcuts"
-                >
-                  ⌨️
-                </button>
-              )}
-
-              {onOpenPlayerName && (
+            {/* Player Name Button */}
+            {onOpenPlayerName && (
+              <li>
                 <button
                   onClick={() => {
                     onOpenPlayerName();
                     setIsMobileMenuOpen(false);
                   }}
-                  className="text-[#39ff14] hover:text-[#ff10f0] transition-all duration-200 flex items-center justify-center font-bold text-lg border-2 border-[#39ff14] px-3 py-3 hover:border-[#ff10f0] cursor-pointer col-span-4"
+                  className="w-full text-[#39ff14] hover:text-[#ff10f0] transition-all duration-200 flex items-center justify-center font-bold text-lg border-2 border-[#39ff14] px-3 py-3 hover:border-[#ff10f0] cursor-pointer"
                   title="Change player name"
                 >
                   <span className="flex items-center gap-2">
-                    👤 <span className="text-sm tracking-wider">{playerName}</span>
+                    👤 <span className="text-sm tracking-wider player-name">{playerName}</span>
                   </span>
                 </button>
-              )}
-            </li>
+              </li>
+            )}
           </ul>
         </div>
       </div>

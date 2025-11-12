@@ -9,6 +9,7 @@ import GameInstructions from '@/components/GameInstructions';
 import { getAchievements } from '@/lib/gameStats';
 import { useSound } from '@/components/SoundEffects';
 import { useScreenShake } from '@/hooks/useScreenShake';
+import { awardCoins, COIN_REWARDS } from '@/lib/coinSystem';
 
 type Position = { x: number; y: number };
 type Direction = 'UP' | 'DOWN' | 'LEFT' | 'RIGHT';
@@ -186,6 +187,23 @@ export default function SnakeGame() {
       if (difficulty === 'hard') {
         checkAchievement('hard_mode_complete', '');
       }
+
+      // Award coins based on performance
+      let coinsEarned = 0;
+      if (score >= 200) {
+        coinsEarned = COIN_REWARDS.PERFECT_GAME; // 5 coins for 200+
+      } else if (score >= 100) {
+        coinsEarned = COIN_REWARDS.BEAT_PERSONAL_BEST; // 3 coins for 100+
+      } else if (score >= 50) {
+        coinsEarned = COIN_REWARDS.HIGH_SCORE; // 2 coins for 50+
+      } else if (score >= 20) {
+        coinsEarned = COIN_REWARDS.GAME_COMPLETED; // 1 coin for 20+
+      }
+
+      if (coinsEarned > 0) {
+        awardCoins(coinsEarned);
+      }
+
       // Show name prompt for high scores
       setPendingScore(score);
       setShowNamePrompt(true);

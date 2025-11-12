@@ -8,6 +8,7 @@ import PlayerNamePrompt from '@/components/PlayerNamePrompt';
 import { getAchievements } from '@/lib/gameStats';
 import { useSound } from '@/components/SoundEffects';
 import { useScreenShake } from '@/hooks/useScreenShake';
+import { awardCoins, COIN_REWARDS } from '@/lib/coinSystem';
 
 const CANVAS_WIDTH = 800;
 const CANVAS_HEIGHT = 600;
@@ -132,6 +133,28 @@ export default function PongGame() {
           setGameOver(true);
           playSound('win');
           triggerShake('medium');
+
+          // Award coins based on score difference
+          const scoreDiff = newScore - aiScore;
+          let coinsEarned = 0;
+
+          if (scoreDiff >= 8) {
+            // Dominated (10-0, 10-1, 10-2)
+            coinsEarned = COIN_REWARDS.PERFECT_GAME; // 5 coins
+          } else if (scoreDiff >= 5) {
+            // Strong win (10-3, 10-4, 10-5)
+            coinsEarned = COIN_REWARDS.BEAT_PERSONAL_BEST; // 3 coins
+          } else if (scoreDiff >= 3) {
+            // Good win (10-6, 10-7)
+            coinsEarned = COIN_REWARDS.HIGH_SCORE; // 2 coins
+          } else {
+            // Close win
+            coinsEarned = COIN_REWARDS.GAME_COMPLETED; // 1 coin
+          }
+
+          if (coinsEarned > 0) {
+            awardCoins(coinsEarned);
+          }
           // Save score and check achievements - need to get current aiScore
           setAiScore(currentAiScore => {
             const achievements = checkAchievement('pong_score', { score: newScore, aiScore: currentAiScore });

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useScreenShake } from '@/hooks/useScreenShake';
+import { awardCoins, COIN_REWARDS } from '@/lib/coinSystem';
 
 type Player = 'X' | 'O' | null;
 type Board = Player[];
@@ -84,6 +85,12 @@ export default function TicTacToe() {
       setWinningLine(result.line);
       setScores((prev) => ({ ...prev, [result.winner as 'X' | 'O']: prev[result.winner as 'X' | 'O'] + 1 }));
       triggerShake('medium');
+
+      // Award coins when player X wins
+      if (result.winner === 'X') {
+        awardCoins(COIN_REWARDS.GAME_COMPLETED); // 1 coin for winning
+      }
+
       return;
     }
 

@@ -8,6 +8,7 @@ import PlayerNamePrompt from '@/components/PlayerNamePrompt';
 import { getAchievements } from '@/lib/gameStats';
 import { useSound } from '@/components/SoundEffects';
 import { useScreenShake } from '@/hooks/useScreenShake';
+import { awardCoins, COIN_REWARDS } from '@/lib/coinSystem';
 
 const CANVAS_WIDTH = 800;
 const CANVAS_HEIGHT = 600;
@@ -215,6 +216,22 @@ export default function SpaceInvadersGame() {
             const finalScore = score;
             setPendingScore(finalScore);
             setShowNamePrompt(true);
+
+            // Award coins based on score
+            let coinsEarned = 0;
+            if (finalScore >= 500) {
+              coinsEarned = COIN_REWARDS.PERFECT_GAME; // 5 coins for 500+
+            } else if (finalScore >= 300) {
+              coinsEarned = COIN_REWARDS.BEAT_PERSONAL_BEST; // 3 coins for 300+
+            } else if (finalScore >= 150) {
+              coinsEarned = COIN_REWARDS.HIGH_SCORE; // 2 coins for 150+
+            } else if (finalScore >= 50) {
+              coinsEarned = COIN_REWARDS.GAME_COMPLETED; // 1 coin for 50+
+            }
+
+            if (coinsEarned > 0) {
+              awardCoins(coinsEarned);
+            }
 
             const achievements = checkAchievement('space_survivor', finalScore);
             if (achievements) {
