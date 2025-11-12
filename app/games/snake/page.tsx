@@ -225,10 +225,11 @@ export default function SnakeGame() {
         <GameInstructions
           gameName="SNAKE ARCADE"
           instructions={[
-            'Use ARROW KEYS to control the snake direction',
+            'Desktop: Use ARROW KEYS to control the snake',
+            'Mobile: Use on-screen TOUCH BUTTONS',
             'Eat the food (glowing squares) to grow longer and earn points',
             'Avoid hitting the walls or your own tail',
-            'Press SPACE to pause/resume the game',
+            'Press SPACE or PAUSE button to pause/resume',
             'Select difficulty: Easy (200ms), Medium (150ms), or Hard (100ms)',
             'Higher difficulty = higher score multiplier!',
           ]}
@@ -453,6 +454,49 @@ export default function SnakeGame() {
               >
                 ⟲ RESTART
               </button>
+            </div>
+
+            {/* Mobile Touch Controls */}
+            <div className="md:hidden mt-6">
+              <p className="text-[#00ffff] text-sm mb-3 tracking-wider">TOUCH CONTROLS</p>
+              <div className="flex flex-col items-center gap-2">
+                {/* Up button */}
+                <button
+                  onTouchStart={() => setNextDirection('UP')}
+                  onClick={() => setNextDirection('UP')}
+                  disabled={!gameStarted || gameOver || isPaused}
+                  className="w-16 h-16 bg-black border-4 border-[#00ffff] text-[#00ffff] hover:bg-[#00ffff] hover:text-black active:bg-[#00ffff] active:text-black transition-all duration-100 font-bold text-2xl disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  ▲
+                </button>
+                {/* Left, Down, Right buttons */}
+                <div className="flex gap-2">
+                  <button
+                    onTouchStart={() => setNextDirection('LEFT')}
+                    onClick={() => setNextDirection('LEFT')}
+                    disabled={!gameStarted || gameOver || isPaused}
+                    className="w-16 h-16 bg-black border-4 border-[#00ffff] text-[#00ffff] hover:bg-[#00ffff] hover:text-black active:bg-[#00ffff] active:text-black transition-all duration-100 font-bold text-2xl disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    ◀
+                  </button>
+                  <button
+                    onTouchStart={() => setNextDirection('DOWN')}
+                    onClick={() => setNextDirection('DOWN')}
+                    disabled={!gameStarted || gameOver || isPaused}
+                    className="w-16 h-16 bg-black border-4 border-[#00ffff] text-[#00ffff] hover:bg-[#00ffff] hover:text-black active:bg-[#00ffff] active:text-black transition-all duration-100 font-bold text-2xl disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    ▼
+                  </button>
+                  <button
+                    onTouchStart={() => setNextDirection('RIGHT')}
+                    onClick={() => setNextDirection('RIGHT')}
+                    disabled={!gameStarted || gameOver || isPaused}
+                    className="w-16 h-16 bg-black border-4 border-[#00ffff] text-[#00ffff] hover:bg-[#00ffff] hover:text-black active:bg-[#00ffff] active:text-black transition-all duration-100 font-bold text-2xl disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    ▶
+                  </button>
+                </div>
+              </div>
             </div>
 
             {/* Instructions */}

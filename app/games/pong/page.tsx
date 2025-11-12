@@ -29,6 +29,7 @@ export default function PongGame() {
   const [unlockedAchievement, setUnlockedAchievement] = useState<any>(null);
   const [showNamePrompt, setShowNamePrompt] = useState(false);
   const [pendingScore, setPendingScore] = useState<number | null>(null);
+  const [playerPaddleVelocity, setPlayerPaddleVelocity] = useState(0);
 
   const gameStateRef = useRef({
     playerY: CANVAS_HEIGHT / 2 - PADDLE_HEIGHT / 2,
@@ -63,10 +64,10 @@ export default function PongGame() {
     const state = gameStateRef.current;
 
     // Move player paddle
-    if (state.keys['ArrowUp'] && state.playerY > 0) {
+    if ((state.keys['ArrowUp'] || playerPaddleVelocity < 0) && state.playerY > 0) {
       state.playerY -= PADDLE_SPEED;
     }
-    if (state.keys['ArrowDown'] && state.playerY < CANVAS_HEIGHT - PADDLE_HEIGHT) {
+    if ((state.keys['ArrowDown'] || playerPaddleVelocity > 0) && state.playerY < CANVAS_HEIGHT - PADDLE_HEIGHT) {
       state.playerY += PADDLE_SPEED;
     }
 
@@ -153,7 +154,7 @@ export default function PongGame() {
       });
       resetBall();
     }
-  }, [gameStarted, isPaused, gameOver, playSound]);
+  }, [gameStarted, isPaused, gameOver, playerPaddleVelocity, playSound]);
 
   const handleNameSubmit = (playerName?: string) => {
     if (pendingScore !== null && playerName) {
@@ -356,6 +357,35 @@ export default function PongGame() {
             )}
           </div>
 
+          {/* Mobile Touch Controls */}
+          <div className="md:hidden mt-6 flex justify-center">
+            <div className="flex flex-col gap-4">
+              <p className="text-[#00ffff] text-sm tracking-wider text-center">MOBILE TOUCH CONTROLS</p>
+              <div className="flex gap-4">
+                <button
+                  onTouchStart={() => setPlayerPaddleVelocity(-1)}
+                  onTouchEnd={() => setPlayerPaddleVelocity(0)}
+                  onClick={() => setPlayerPaddleVelocity(-1)}
+                  onMouseUp={() => setPlayerPaddleVelocity(0)}
+                  disabled={!gameStarted || gameOver || isPaused}
+                  className="w-16 h-16 bg-black border-4 border-[#00ffff] text-[#00ffff] hover:bg-[#00ffff] hover:text-black active:bg-[#00ffff] active:text-black transition-all duration-100 font-bold text-2xl disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  ▲
+                </button>
+                <button
+                  onTouchStart={() => setPlayerPaddleVelocity(1)}
+                  onTouchEnd={() => setPlayerPaddleVelocity(0)}
+                  onClick={() => setPlayerPaddleVelocity(1)}
+                  onMouseUp={() => setPlayerPaddleVelocity(0)}
+                  disabled={!gameStarted || gameOver || isPaused}
+                  className="w-16 h-16 bg-black border-4 border-[#00ffff] text-[#00ffff] hover:bg-[#00ffff] hover:text-black active:bg-[#00ffff] active:text-black transition-all duration-100 font-bold text-2xl disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  ▼
+                </button>
+              </div>
+            </div>
+          </div>
+
           <div className="text-center space-y-4">
             <div className="flex justify-center gap-4">
               <button
@@ -377,7 +407,8 @@ export default function PongGame() {
 
             <div className="border-t-2 border-[#ff10f0]/30 pt-4 mt-4">
               <div className="text-[#00ffff] text-xs tracking-wider space-y-1 font-mono">
-                <p>🎮 USE ▲ ▼ ARROW KEYS TO MOVE PADDLE</p>
+                <p>🎮 DESKTOP: USE ▲ ▼ ARROW KEYS TO MOVE PADDLE</p>
+                <p>📱 MOBILE: USE ON-SCREEN TOUCH BUTTONS</p>
                 <p>⏸ PRESS SPACE TO PAUSE/RESUME</p>
                 <p>🏓 FIRST TO 10 POINTS WINS</p>
               </div>
