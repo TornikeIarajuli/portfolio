@@ -64,11 +64,11 @@ export default function Navigation({ activeSection, onOpenAchievements, onOpenLe
   const [hoveredGame, setHoveredGame] = useState<string | null>(null);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/90 border-b-4 border-[#ff10f0] neon-border backdrop-blur-sm">
-      <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/95 border-b-4 border-[#ff10f0] neon-border backdrop-blur-sm">
+      <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-4">
         <div className="flex justify-between items-center">
           {/* Arcade-style logo */}
-          <h1 className="text-xl sm:text-2xl font-bold neon-text-yellow text-[#ffff00] tracking-widest pixel-corners bg-black px-3 sm:px-4 py-2 border-2 border-[#ffff00]">
+          <h1 className="text-2xl sm:text-2xl font-bold neon-text-yellow text-[#ffff00] tracking-widest pixel-corners bg-black px-4 sm:px-4 py-3 border-2 border-[#ffff00]">
             TI
           </h1>
 
@@ -230,13 +230,14 @@ export default function Navigation({ activeSection, onOpenAchievements, onOpenLe
           {/* Mobile Hamburger Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden text-[#ff10f0] hover:text-[#00ffff] transition-all duration-200 border-2 border-[#ff10f0] hover:border-[#00ffff] px-3 py-2 cursor-pointer"
+            className="lg:hidden text-[#ff10f0] hover:text-[#00ffff] transition-all duration-200 border-3 border-[#ff10f0] hover:border-[#00ffff] px-4 py-3 cursor-pointer"
+            style={{borderWidth: '3px'}}
             aria-label="Toggle menu"
           >
-            <div className="w-6 h-5 flex flex-col justify-between">
-              <span className={`block h-1 bg-current transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+            <div className="w-7 h-6 flex flex-col justify-between">
+              <span className={`block h-1 bg-current transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-2.5' : ''}`}></span>
               <span className={`block h-1 bg-current transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
-              <span className={`block h-1 bg-current transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+              <span className={`block h-1 bg-current transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-2.5' : ''}`}></span>
             </div>
           </button>
         </div>
