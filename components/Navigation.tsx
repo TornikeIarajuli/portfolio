@@ -243,8 +243,8 @@ export default function Navigation({ activeSection, onOpenAchievements, onOpenLe
 
         {/* Mobile Menu */}
         <div
-          className={`lg:hidden overflow-hidden transition-all duration-300 ${
-            isMobileMenuOpen ? 'max-h-[600px] opacity-100 mt-4' : 'max-h-0 opacity-0'
+          className={`lg:hidden overflow-y-auto transition-all duration-300 ${
+            isMobileMenuOpen ? 'max-h-[80vh] opacity-100 mt-4' : 'max-h-0 opacity-0'
           }`}
         >
           <ul className="flex flex-col gap-3 pb-4">
@@ -283,7 +283,7 @@ export default function Navigation({ activeSection, onOpenAchievements, onOpenLe
 
               {/* Mobile Games Dropdown */}
               {showGamesDropdown && (
-                <div className="mt-2 ml-4 border-l-4 border-[#ff10f0]">
+                <div className="mt-2 ml-4 border-l-4 border-[#ff10f0] max-h-[60vh] overflow-y-auto">
                   {games.map((game) => (
                     <div key={game.id}>
                       <Link
@@ -291,24 +291,31 @@ export default function Navigation({ activeSection, onOpenAchievements, onOpenLe
                         onClick={() => setIsMobileMenuOpen(false)}
                         className="block px-4 py-3 text-[#00ffff] hover:bg-[#ff10f0] hover:text-black transition-all duration-200 font-bold tracking-wide border-b-2 border-[#ff10f0]/30"
                       >
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-xl">{game.icon}</span>
-                          <span>▸ {game.label}</span>
+                        {/* Horizontal layout with preview on left */}
+                        <div className="flex gap-3 items-center">
+                          {/* Preview Image - Fixed size on left */}
+                          <div className="flex-shrink-0 w-20 h-20 border border-[#00ffff]/50 overflow-hidden">
+                            <img
+                              src={game.preview}
+                              alt={game.label}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><rect width="80" height="80" fill="%230a0014"/><text x="50%" y="50%" fill="%23ff10f0" font-family="monospace" font-size="10" text-anchor="middle" dominant-baseline="middle">?</text></svg>';
+                              }}
+                            />
+                          </div>
+
+                          {/* Text content on right */}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-lg">{game.icon}</span>
+                              <span className="text-sm font-bold">▸ {game.label}</span>
+                            </div>
+                            <p className="text-[#ffff00] text-xs tracking-wide line-clamp-2">
+                              {game.description}
+                            </p>
+                          </div>
                         </div>
-                        {/* Mobile preview */}
-                        <div className="mt-2 border-2 border-[#00ffff]/50 overflow-hidden">
-                          <img
-                            src={game.preview}
-                            alt={game.label}
-                            className="w-full h-24 object-cover"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="256" height="96" viewBox="0 0 256 96"><rect width="256" height="96" fill="%230a0014"/><text x="50%" y="50%" fill="%23ff10f0" font-family="monospace" font-size="12" text-anchor="middle" dominant-baseline="middle">PREVIEW</text></svg>';
-                            }}
-                          />
-                        </div>
-                        <p className="text-[#ffff00] text-xs mt-2 tracking-wide">
-                          {game.description}
-                        </p>
                       </Link>
                     </div>
                   ))}
