@@ -4,8 +4,8 @@
 
 ### 1. **Retro Pixelated Cursor (#8)**
 Custom arcade-style cursor that enhances the retro aesthetic:
-- **Default Cursor:** Cyan & pink checkered pixel pattern
-- **Interactive Elements:** Yellow pixel hand pointer for buttons, links, and form fields
+- **Default Cursor:** Pink pixelated crosshair (like classic arcade shooters)
+- **Interactive Elements:** Pink pixelated arrow pointer for buttons, links, and form fields
 - **Auto-disabled on mobile:** Touch devices use native cursors for better UX
 
 **Files Modified:**
@@ -24,7 +24,32 @@ Made the navigation bar fully responsive with mobile hamburger menu:
 **Files Modified:**
 - `components/Navigation.tsx` (lines 21-22, 45-46, 74, 192-340)
 
-### 3. **Mobile Responsiveness (#5)**
+### 3. **Game Preview Images in Dropdown (#11)**
+Added visual game previews to the games dropdown menu:
+- **Desktop:** Hover over any game to see a preview panel with screenshot and description
+- **Mobile:** Each game shows preview image inline when dropdown is expanded
+- **Retro Style:** Custom SVG preview images for each game with arcade aesthetic
+- **Fallback:** Graceful error handling if preview fails to load
+- **Interactive:** "Click to Play" prompt on desktop previews
+
+**Features:**
+- Snake preview shows the classic snake and food
+- Tic-Tac-Toe preview displays the game board with X's and O's
+- Memory preview shows face-up and face-down cards
+- Pong preview features paddles, ball, and center line
+- Space Invaders preview shows aliens, player ship, and barriers
+
+**Files Modified:**
+- `components/Navigation.tsx` (lines 56-64, 106-155, 285-316)
+
+**Files Created:**
+- `public/previews/snake.svg`
+- `public/previews/tictactoe.svg`
+- `public/previews/memory.svg`
+- `public/previews/pong.svg`
+- `public/previews/spaceinvaders.svg`
+
+### 4. **Mobile Responsiveness (#5)**
 Comprehensive mobile optimizations for better gameplay and user experience:
 
 #### 📱 Touch Device Optimizations

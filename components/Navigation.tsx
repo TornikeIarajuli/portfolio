@@ -54,12 +54,14 @@ export default function Navigation({ activeSection, onOpenAchievements, onOpenLe
   ];
 
   const games = [
-    { id: 'snake', label: 'SNAKE', icon: '🐍' },
-    { id: 'tictactoe', label: 'TIC-TAC-TOE', icon: '❌' },
-    { id: 'memory', label: 'MEMORY', icon: '🎴' },
-    { id: 'pong', label: 'PONG', icon: '🏓' },
-    { id: 'spaceinvaders', label: 'SPACE INVADERS', icon: '👾' },
+    { id: 'snake', label: 'SNAKE', icon: '🐍', preview: '/previews/snake.svg', description: 'Classic snake game - Eat and grow!' },
+    { id: 'tictactoe', label: 'TIC-TAC-TOE', icon: '❌', preview: '/previews/tictactoe.svg', description: 'Strategic board game' },
+    { id: 'memory', label: 'MEMORY', icon: '🎴', preview: '/previews/memory.svg', description: 'Match the cards!' },
+    { id: 'pong', label: 'PONG', icon: '🏓', preview: '/previews/pong.svg', description: 'Arcade classic ping pong' },
+    { id: 'spaceinvaders', label: 'SPACE INVADERS', icon: '👾', preview: '/previews/spaceinvaders.svg', description: 'Defend against alien invasion!' },
   ];
+
+  const [hoveredGame, setHoveredGame] = useState<string | null>(null);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-black/90 border-b-4 border-[#ff10f0] neon-border backdrop-blur-sm">
@@ -101,18 +103,54 @@ export default function Navigation({ activeSection, onOpenAchievements, onOpenLe
                 </svg>
               </button>
 
-              {/* Dropdown with arcade style */}
-              <div className="absolute top-full right-0 mt-2 w-56 bg-black border-4 border-[#ff10f0] neon-border overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                {games.map((game) => (
-                  <Link
-                    key={game.id}
-                    href={`/games/${game.id}`}
-                    className="block px-4 py-3 text-[#00ffff] hover:bg-[#ff10f0] hover:text-black transition-all duration-200 font-bold tracking-wide border-b-2 border-[#ff10f0]/30 last:border-b-0"
-                  >
-                    <span className="inline-block mr-2">{game.icon}</span>
-                    <span>▸ {game.label}</span>
-                  </Link>
-                ))}
+              {/* Dropdown with arcade style and preview */}
+              <div className="absolute top-full right-0 mt-2 flex gap-4 bg-black border-4 border-[#ff10f0] neon-border overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                {/* Games list */}
+                <div className="w-56">
+                  {games.map((game) => (
+                    <Link
+                      key={game.id}
+                      href={`/games/${game.id}`}
+                      onMouseEnter={() => setHoveredGame(game.id)}
+                      onMouseLeave={() => setHoveredGame(null)}
+                      className="block px-4 py-3 text-[#00ffff] hover:bg-[#ff10f0] hover:text-black transition-all duration-200 font-bold tracking-wide border-b-2 border-[#ff10f0]/30 last:border-b-0"
+                    >
+                      <span className="inline-block mr-2">{game.icon}</span>
+                      <span>▸ {game.label}</span>
+                    </Link>
+                  ))}
+                </div>
+
+                {/* Preview panel */}
+                <div className="w-64 border-l-4 border-[#ff10f0] p-4 bg-black/50">
+                  {hoveredGame ? (
+                    <div className="space-y-2">
+                      <div className="border-2 border-[#00ffff] neon-border-cyan overflow-hidden">
+                        <img
+                          src={games.find(g => g.id === hoveredGame)?.preview}
+                          alt={games.find(g => g.id === hoveredGame)?.label}
+                          className="w-full h-32 object-cover"
+                          onError={(e) => {
+                            // Fallback to placeholder
+                            (e.target as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="256" height="128" viewBox="0 0 256 128"><rect width="256" height="128" fill="%230a0014"/><text x="50%" y="50%" fill="%23ff10f0" font-family="monospace" font-size="16" text-anchor="middle" dominant-baseline="middle">GAME PREVIEW</text></svg>';
+                          }}
+                        />
+                      </div>
+                      <p className="text-[#ffff00] text-xs tracking-wider font-bold">
+                        {games.find(g => g.id === hoveredGame)?.description}
+                      </p>
+                      <p className="text-[#39ff14] text-xs tracking-wider">
+                        ▶ CLICK TO PLAY
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="h-full flex items-center justify-center">
+                      <p className="text-[#ff10f0] text-xs tracking-wider text-center">
+                        HOVER OVER A GAME<br/>TO SEE PREVIEW
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
             </li>
 
@@ -247,15 +285,32 @@ export default function Navigation({ activeSection, onOpenAchievements, onOpenLe
               {showGamesDropdown && (
                 <div className="mt-2 ml-4 border-l-4 border-[#ff10f0]">
                   {games.map((game) => (
-                    <Link
-                      key={game.id}
-                      href={`/games/${game.id}`}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="block px-4 py-3 text-[#00ffff] hover:bg-[#ff10f0] hover:text-black transition-all duration-200 font-bold tracking-wide border-b-2 border-[#ff10f0]/30 last:border-b-0"
-                    >
-                      <span className="inline-block mr-2">{game.icon}</span>
-                      <span>▸ {game.label}</span>
-                    </Link>
+                    <div key={game.id}>
+                      <Link
+                        href={`/games/${game.id}`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="block px-4 py-3 text-[#00ffff] hover:bg-[#ff10f0] hover:text-black transition-all duration-200 font-bold tracking-wide border-b-2 border-[#ff10f0]/30"
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-xl">{game.icon}</span>
+                          <span>▸ {game.label}</span>
+                        </div>
+                        {/* Mobile preview */}
+                        <div className="mt-2 border-2 border-[#00ffff]/50 overflow-hidden">
+                          <img
+                            src={game.preview}
+                            alt={game.label}
+                            className="w-full h-24 object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="256" height="96" viewBox="0 0 256 96"><rect width="256" height="96" fill="%230a0014"/><text x="50%" y="50%" fill="%23ff10f0" font-family="monospace" font-size="12" text-anchor="middle" dominant-baseline="middle">PREVIEW</text></svg>';
+                            }}
+                          />
+                        </div>
+                        <p className="text-[#ffff00] text-xs mt-2 tracking-wide">
+                          {game.description}
+                        </p>
+                      </Link>
+                    </div>
                   ))}
                 </div>
               )}
