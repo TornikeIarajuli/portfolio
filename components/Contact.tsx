@@ -99,36 +99,36 @@ export default function Contact() {
   ];
 
   return (
-    <section id="contact" className="min-h-screen flex items-center py-20 relative z-10">
-      <div className="container mx-auto px-6 max-w-5xl">
+    <section id="contact" className="min-h-screen flex items-center py-16 md:py-20 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
         {/* Arcade header */}
-        <div className="text-center mb-12">
-          <div className="inline-block border-4 border-[#ff10f0] neon-border bg-black px-8 py-3">
-            <h2 className="text-4xl font-bold neon-text text-[#ff10f0] tracking-widest">
+        <div className="text-center mb-8 md:mb-12">
+          <div className="inline-block border-4 border-[#ff10f0] neon-border bg-black px-4 sm:px-6 md:px-8 py-2 sm:py-3">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold neon-text text-[#ff10f0] tracking-widest">
               ▼ CONNECT ▼
             </h2>
           </div>
         </div>
 
         {/* Contact info cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8 md:mb-12">
           {contactInfo.map((info, index) => (
             <a
               key={index}
               href={info.link}
               target={info.link.startsWith('http') ? '_blank' : undefined}
               rel={info.link.startsWith('http') ? 'noopener noreferrer' : undefined}
-              className="bg-black border-4 p-4 text-center transition-all duration-200 hover:scale-105 pixel-corners"
+              className="bg-black border-4 p-3 md:p-4 text-center transition-all duration-200 hover:scale-105 pixel-corners"
               style={{
                 borderColor: info.color,
                 boxShadow: `0 0 10px ${info.color}`
               }}
             >
-              <div className="text-4xl mb-2">{info.icon}</div>
-              <p className="text-xs tracking-wider mb-1" style={{color: info.color}}>
+              <div className="text-3xl md:text-4xl mb-1 md:mb-2">{info.icon}</div>
+              <p className="text-[10px] sm:text-xs tracking-wider mb-1" style={{color: info.color}}>
                 {info.title}
               </p>
-              <p className="text-[#00ffff] text-xs font-mono">
+              <p className="text-[#00ffff] text-[9px] sm:text-xs font-mono break-words">
                 {info.value}
               </p>
             </a>
@@ -136,16 +136,16 @@ export default function Contact() {
         </div>
 
         {/* Contact Form - arcade machine style */}
-        <div className="bg-black border-4 border-[#00ffff] neon-border-cyan p-8 pixel-corners">
-          <div className="text-center mb-6">
-            <h3 className="text-2xl font-bold text-[#00ffff] tracking-widest inline-block px-6 py-2 border-4 border-[#00ffff]">
+        <div className="bg-black border-4 border-[#00ffff] neon-border-cyan p-4 sm:p-6 md:p-8 pixel-corners">
+          <div className="text-center mb-4 md:mb-6">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-[#00ffff] tracking-widest inline-block px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 border-4 border-[#00ffff]">
               ▶ SEND MESSAGE ◀
             </h3>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-bold tracking-wider text-[#ff10f0] mb-2 uppercase">
+              <label htmlFor="name" className="block text-xs sm:text-sm font-bold tracking-wider text-[#ff10f0] mb-1.5 md:mb-2 uppercase">
                 ▸ Name
               </label>
               <input
@@ -155,14 +155,14 @@ export default function Contact() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-black border-3 border-[#ff10f0] text-[#00ffff] placeholder-gray-600 focus:outline-none font-mono"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-black border-3 border-[#ff10f0] text-[#00ffff] placeholder-gray-600 focus:outline-none font-mono text-sm"
                 style={{borderWidth: '3px'}}
                 placeholder="ENTER NAME..."
               />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-bold tracking-wider text-[#ff10f0] mb-2 uppercase">
+              <label htmlFor="email" className="block text-xs sm:text-sm font-bold tracking-wider text-[#ff10f0] mb-1.5 md:mb-2 uppercase">
                 ▸ Email
               </label>
               <input
@@ -172,14 +172,14 @@ export default function Contact() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-black border-3 border-[#ff10f0] text-[#00ffff] placeholder-gray-600 focus:outline-none font-mono"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-black border-3 border-[#ff10f0] text-[#00ffff] placeholder-gray-600 focus:outline-none font-mono text-sm"
                 style={{borderWidth: '3px'}}
                 placeholder="ENTER EMAIL..."
               />
             </div>
 
             <div>
-              <label htmlFor="subject" className="block text-sm font-bold tracking-wider text-[#ff10f0] mb-2 uppercase">
+              <label htmlFor="subject" className="block text-xs sm:text-sm font-bold tracking-wider text-[#ff10f0] mb-1.5 md:mb-2 uppercase">
                 ▸ Subject
               </label>
               <input
@@ -189,14 +189,14 @@ export default function Contact() {
                 value={formData.subject}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-black border-3 border-[#ff10f0] text-[#00ffff] placeholder-gray-600 focus:outline-none font-mono"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-black border-3 border-[#ff10f0] text-[#00ffff] placeholder-gray-600 focus:outline-none font-mono text-sm"
                 style={{borderWidth: '3px'}}
                 placeholder="ENTER SUBJECT..."
               />
             </div>
 
             <div>
-              <label htmlFor="message" className="block text-sm font-bold tracking-wider text-[#ff10f0] mb-2 uppercase">
+              <label htmlFor="message" className="block text-xs sm:text-sm font-bold tracking-wider text-[#ff10f0] mb-1.5 md:mb-2 uppercase">
                 ▸ Message
               </label>
               <textarea
@@ -206,7 +206,7 @@ export default function Contact() {
                 onChange={handleChange}
                 required
                 rows={5}
-                className="w-full px-4 py-3 bg-black border-3 border-[#ff10f0] text-[#00ffff] placeholder-gray-600 focus:outline-none resize-none font-mono"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-black border-3 border-[#ff10f0] text-[#00ffff] placeholder-gray-600 focus:outline-none resize-none font-mono text-sm"
                 style={{borderWidth: '3px'}}
                 placeholder="ENTER MESSAGE..."
               />
@@ -215,7 +215,7 @@ export default function Contact() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full retro-btn px-8 py-4 text-white uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full retro-btn px-4 sm:px-6 md:px-8 py-3 md:py-4 text-white uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
             >
               {isSubmitting ? '⏳ SENDING...' : submitStatus === 'success' ? '✓ SENT!' : '▶ FIRE!'}
             </button>
@@ -248,12 +248,12 @@ export default function Contact() {
         </div>
 
         {/* Arcade footer */}
-        <div className="mt-12 text-center">
-          <div className="inline-block bg-black border-4 border-[#ffff00] px-8 py-3">
-            <p className="text-[#ffff00] text-sm tracking-widest font-mono">
+        <div className="mt-8 md:mt-12 text-center">
+          <div className="inline-block bg-black border-4 border-[#ffff00] px-4 sm:px-6 md:px-8 py-2 md:py-3">
+            <p className="text-[#ffff00] text-xs sm:text-sm tracking-widest font-mono">
               © {new Date().getFullYear()} TORNIKE IARAJULI
             </p>
-            <p className="text-[#00ffff] text-xs tracking-wider mt-1">
+            <p className="text-[#00ffff] text-[10px] sm:text-xs tracking-wider mt-1">
               ★ CRAFTED WITH RETRO VIBES ★
             </p>
           </div>

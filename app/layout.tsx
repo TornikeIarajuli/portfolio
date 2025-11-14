@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { BackgroundMusicProvider } from "@/components/BackgroundMusic";
 import { ShopProvider } from "@/contexts/ShopContext";
 import CosmeticApplier from "@/components/CosmeticApplier";
+import KonamiCode from "@/components/KonamiCode";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -85,6 +86,7 @@ export default function RootLayout({
           <BackgroundMusicProvider>
             <ShopProvider>
               <CosmeticApplier />
+              <KonamiCode />
               {children}
             </ShopProvider>
           </BackgroundMusicProvider>

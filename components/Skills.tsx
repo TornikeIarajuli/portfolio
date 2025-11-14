@@ -79,53 +79,54 @@ export default function Skills() {
   ];
 
   return (
-    <section id="skills" className="min-h-screen flex items-center py-20 relative z-10">
-      <div className="container mx-auto px-6 max-w-6xl">
+    <section id="skills" className="min-h-screen flex items-center py-16 md:py-20 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
         {/* Arcade header */}
-        <div className="text-center mb-12">
-          <div className="inline-block border-4 border-[#39ff14] bg-black px-8 py-3">
-            <h2 className="text-4xl font-bold text-[#39ff14] tracking-widest" style={{textShadow: '0 0 20px #39ff14'}}>
+        <div className="text-center mb-8 md:mb-12">
+          <div className="inline-block border-4 border-[#39ff14] bg-black px-4 sm:px-6 md:px-8 py-2 sm:py-3">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#39ff14] tracking-widest" style={{textShadow: '0 0 20px #39ff14'}}>
               ⚔ POWER-UPS ⚔
             </h2>
           </div>
         </div>
 
-        <div className="space-y-8">
+        <div className="space-y-6 md:space-y-8">
           {skillCategories.map((category, categoryIndex) => (
             <div key={categoryIndex}>
               {/* Category header */}
-              <div className="mb-4 flex items-center gap-3">
-                <div className="h-1 flex-grow" style={{background: `linear-gradient(to right, transparent, ${category.color}, transparent)`}}></div>
+              <div className="mb-3 md:mb-4 flex items-center gap-2 md:gap-3">
+                <div className="h-0.5 md:h-1 flex-grow hidden sm:block" style={{background: `linear-gradient(to right, transparent, ${category.color}, transparent)`}}></div>
                 <h3
-                  className="text-xl font-bold tracking-wider px-4 py-2 border-4 bg-black uppercase"
+                  className="text-sm sm:text-base md:text-xl font-bold tracking-wider px-2 sm:px-3 md:px-4 py-1.5 md:py-2 border-3 md:border-4 bg-black uppercase"
                   style={{
                     color: category.color,
                     borderColor: category.color,
-                    boxShadow: `0 0 10px ${category.color}`
+                    boxShadow: `0 0 10px ${category.color}`,
+                    borderWidth: '3px'
                   }}
                 >
                   {category.name}
                 </h3>
-                <div className="h-1 flex-grow" style={{background: `linear-gradient(to right, ${category.color}, transparent)`}}></div>
+                <div className="h-0.5 md:h-1 flex-grow hidden sm:block" style={{background: `linear-gradient(to right, ${category.color}, transparent)`}}></div>
               </div>
 
               {/* Skills grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-3">
                 {category.skills.map((skill, skillIndex) => (
                   <div
                     key={skillIndex}
-                    className="bg-black border-3 p-4 text-center transition-all duration-200 hover:scale-110 pixel-corners"
+                    className="bg-black border-3 p-2 sm:p-3 md:p-4 text-center transition-all duration-200 hover:scale-110 pixel-corners"
                     style={{
                       borderWidth: '3px',
                       borderColor: category.color,
                       borderStyle: 'solid'
                     }}
                   >
-                    <div className="text-3xl mb-2">
+                    <div className="text-xl sm:text-2xl md:text-3xl mb-1 md:mb-2">
                       {skill.icon}
                     </div>
                     <h4
-                      className="font-bold text-xs tracking-wide uppercase"
+                      className="font-bold text-[10px] sm:text-xs tracking-wide uppercase"
                       style={{color: category.color}}
                     >
                       {skill.name}
@@ -138,9 +139,9 @@ export default function Skills() {
         </div>
 
         {/* Arcade-style score footer */}
-        <div className="mt-12 text-center">
-          <div className="inline-block bg-black border-4 border-[#ffff00] px-8 py-3">
-            <p className="text-[#ffff00] font-bold tracking-widest" style={{textShadow: '0 0 10px #ffff00'}}>
+        <div className="mt-8 md:mt-12 text-center">
+          <div className="inline-block bg-black border-4 border-[#ffff00] px-4 sm:px-6 md:px-8 py-2 sm:py-3">
+            <p className="text-[#ffff00] font-bold text-sm sm:text-base tracking-widest" style={{textShadow: '0 0 10px #ffff00'}}>
               TOTAL SKILLS: {skillCategories.reduce((sum, cat) => sum + cat.skills.length, 0)}
             </p>
           </div>

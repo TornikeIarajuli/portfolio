@@ -55,33 +55,33 @@ export default function ThemeSelector() {
   };
 
   return (
-    <div className="fixed top-20 right-4 z-50">
+    <div className="fixed top-16 sm:top-20 right-2 sm:right-4 z-50">
       {/* Theme Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="bg-black border-3 border-[var(--color-primary)] px-4 py-3 text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-black transition-all duration-300 font-bold tracking-wider shadow-lg"
+        className="bg-black border-3 border-[var(--color-primary)] px-2 sm:px-3 md:px-4 py-2 sm:py-2.5 md:py-3 text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-black transition-all duration-300 font-bold tracking-wider shadow-lg text-xs sm:text-sm"
         style={{ borderWidth: '3px' }}
       >
-        🎨 THEMES
+        🎨 <span className="hidden sm:inline">THEMES</span>
       </button>
 
       {/* Coin Display */}
-      <div className="mt-2 bg-black border-2 border-[var(--color-accent)] px-3 py-2 text-center">
-        <p className="text-[var(--color-accent)] text-xs tracking-wider font-bold">
+      <div className="mt-1.5 sm:mt-2 bg-black border-2 border-[var(--color-accent)] px-2 sm:px-3 py-1.5 sm:py-2 text-center">
+        <p className="text-[var(--color-accent)] text-[10px] sm:text-xs tracking-wider font-bold">
           COINS: {coins}
         </p>
       </div>
 
       {/* Theme Selection Panel */}
       {isOpen && (
-        <div className="absolute top-full right-0 mt-2 bg-black border-3 border-[var(--color-primary)] p-4 min-w-[280px] shadow-2xl">
-          <div className="border-b-2 border-[var(--color-secondary)] pb-3 mb-3">
-            <h3 className="text-[var(--color-primary)] font-bold tracking-wider text-center">
+        <div className="absolute top-full right-0 mt-2 bg-black border-3 border-[var(--color-primary)] p-3 sm:p-4 min-w-[240px] sm:min-w-[280px] shadow-2xl max-h-[80vh] overflow-y-auto">
+          <div className="border-b-2 border-[var(--color-secondary)] pb-2 sm:pb-3 mb-2 sm:mb-3">
+            <h3 className="text-[var(--color-primary)] font-bold tracking-wider text-center text-xs sm:text-sm">
               SELECT THEME
             </h3>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-1.5 sm:space-y-2">
             {(Object.keys(themeInfo) as ThemeType[]).map((themeKey) => {
               const info = themeInfo[themeKey];
               const isUnlocked = unlockedThemes.includes(themeKey);
@@ -92,7 +92,7 @@ export default function ThemeSelector() {
                   key={themeKey}
                   onClick={() => handleThemeSelect(themeKey)}
                   disabled={isActive}
-                  className={`w-full text-left px-3 py-2 border-2 transition-all duration-200 ${
+                  className={`w-full text-left px-2 sm:px-3 py-1.5 sm:py-2 border-2 transition-all duration-200 ${
                     isActive
                       ? 'border-[var(--color-accent)] bg-[var(--color-accent)] text-black'
                       : isUnlocked
@@ -101,17 +101,17 @@ export default function ThemeSelector() {
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg">{info.icon}</span>
-                      <span className="text-xs font-bold tracking-wider">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <span className="text-base sm:text-lg">{info.icon}</span>
+                      <span className="text-[10px] sm:text-xs font-bold tracking-wider">
                         {info.name}
                       </span>
                     </div>
                     <div>
                       {isActive ? (
-                        <span className="text-xs">✓</span>
+                        <span className="text-[10px] sm:text-xs">✓</span>
                       ) : !isUnlocked ? (
-                        <span className="text-xs">🪙 {info.cost}</span>
+                        <span className="text-[10px] sm:text-xs">🪙 {info.cost}</span>
                       ) : null}
                     </div>
                   </div>
@@ -120,8 +120,8 @@ export default function ThemeSelector() {
             })}
           </div>
 
-          <div className="mt-3 pt-3 border-t-2 border-[var(--color-secondary)]">
-            <p className="text-[var(--color-secondary)] text-xs text-center">
+          <div className="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t-2 border-[var(--color-secondary)]">
+            <p className="text-[var(--color-secondary)] text-[10px] sm:text-xs text-center">
               🎮 Play games to earn coins!
             </p>
           </div>

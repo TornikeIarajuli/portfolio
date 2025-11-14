@@ -89,39 +89,39 @@ export default function Experience() {
   ];
 
   return (
-    <section id="experience" className="min-h-screen flex items-center py-20 relative z-10">
-      <div className="container mx-auto px-6 max-w-6xl">
+    <section id="experience" className="min-h-screen flex items-center py-16 md:py-20 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
         {/* Arcade header */}
-        <div className="text-center mb-12">
-          <div className="inline-block border-4 border-[#ff10f0] neon-border bg-black px-8 py-3">
-            <h2 className="text-4xl font-bold neon-text text-[#ff10f0] tracking-widest">
+        <div className="text-center mb-8 md:mb-12">
+          <div className="inline-block border-4 border-[#ff10f0] neon-border bg-black px-4 sm:px-6 md:px-8 py-2 sm:py-3">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold neon-text text-[#ff10f0] tracking-widest">
               ◀ LEVEL SELECT ▶
             </h2>
           </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-6 md:gap-8">
           {/* Job selector - arcade machine style */}
           <div className="lg:w-1/3">
-            <div className="space-y-3">
+            <div className="space-y-2 md:space-y-3">
               {jobs.map((job, index) => (
                 <button
                   key={index}
                   onClick={() => setSelectedJob(index)}
-                  className={`w-full text-left p-4 transition-all duration-200 font-bold tracking-wide border-4 ${
+                  className={`w-full text-left p-3 sm:p-4 transition-all duration-200 font-bold tracking-wide border-4 ${
                     selectedJob === index
                       ? 'bg-[#ff10f0] border-[#ff10f0] text-black scale-105 neon-border'
                       : 'bg-black border-[#00ffff] text-[#00ffff] hover:border-[#ff10f0] hover:text-[#ff10f0]'
                   }`}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-2xl">{selectedJob === index ? '▶' : '▸'}</span>
+                    <span className="text-xl sm:text-2xl">{selectedJob === index ? '▶' : '▸'}</span>
                     <div>
-                      <h3 className="text-sm mb-1">{job.title}</h3>
-                      <p className={`text-xs ${selectedJob === index ? 'text-black/80' : 'text-[#39ff14]'}`}>
+                      <h3 className="text-xs sm:text-sm mb-1">{job.title}</h3>
+                      <p className={`text-[10px] sm:text-xs ${selectedJob === index ? 'text-black/80' : 'text-[#39ff14]'}`}>
                         {job.company}
                       </p>
-                      <p className={`text-xs ${selectedJob === index ? 'text-black/70' : 'text-[#ffff00]'}`}>
+                      <p className={`text-[10px] sm:text-xs ${selectedJob === index ? 'text-black/70' : 'text-[#ffff00]'}`}>
                         {job.period}
                       </p>
                     </div>
@@ -133,25 +133,25 @@ export default function Experience() {
 
           {/* Job details - arcade screen */}
           <div className="lg:w-2/3">
-            <div className="bg-black border-4 border-[#00ffff] neon-border-cyan p-8 pixel-corners min-h-[600px]">
+            <div className="bg-black border-4 border-[#00ffff] neon-border-cyan p-4 sm:p-6 md:p-8 pixel-corners min-h-[400px] md:min-h-[600px]">
               {/* Title */}
-              <div className="mb-6">
-                <h3 className="text-3xl font-bold text-[#ff10f0] neon-text mb-2 tracking-wide">{jobs[selectedJob].title}</h3>
-                <p className="text-[#00ffff] text-xl mb-1">{jobs[selectedJob].company}</p>
-                <p className="text-[#39ff14] font-mono">{jobs[selectedJob].period}</p>
+              <div className="mb-4 md:mb-6">
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#ff10f0] neon-text mb-2 tracking-wide">{jobs[selectedJob].title}</h3>
+                <p className="text-[#00ffff] text-base sm:text-lg md:text-xl mb-1">{jobs[selectedJob].company}</p>
+                <p className="text-[#39ff14] font-mono text-xs sm:text-sm md:text-base">{jobs[selectedJob].period}</p>
               </div>
 
-              <p className="text-[#ffff00] mb-6 font-mono text-sm">{jobs[selectedJob].description}</p>
+              <p className="text-[#ffff00] mb-4 md:mb-6 font-mono text-xs sm:text-sm">{jobs[selectedJob].description}</p>
 
               {/* Achievements */}
-              <div className="mb-6">
-                <h4 className="text-lg font-bold text-[#ff10f0] mb-4 tracking-wider flex items-center gap-2">
+              <div className="mb-4 md:mb-6">
+                <h4 className="text-base sm:text-lg font-bold text-[#ff10f0] mb-3 md:mb-4 tracking-wider flex items-center gap-2">
                   <span>★</span> ACHIEVEMENTS
                 </h4>
-                <ul className="space-y-2">
+                <ul className="space-y-1.5 md:space-y-2">
                   {jobs[selectedJob].achievements.map((achievement, index) => (
-                    <li key={index} className="flex items-start gap-3 text-[#00ffff] font-mono text-sm">
-                      <span className="text-[#39ff14] mt-1">▸</span>
+                    <li key={index} className="flex items-start gap-2 md:gap-3 text-[#00ffff] font-mono text-[10px] sm:text-xs md:text-sm">
+                      <span className="text-[#39ff14] mt-0.5 md:mt-1">▸</span>
                       <span>{achievement}</span>
                     </li>
                   ))}
@@ -160,14 +160,14 @@ export default function Experience() {
 
               {/* Tools */}
               <div>
-                <h4 className="text-lg font-bold text-[#ff10f0] mb-4 tracking-wider flex items-center gap-2">
+                <h4 className="text-base sm:text-lg font-bold text-[#ff10f0] mb-3 md:mb-4 tracking-wider flex items-center gap-2">
                   <span>⚙</span> TECH STACK
                 </h4>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5 md:gap-2">
                   {jobs[selectedJob].tools.map((tool, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 bg-[#ff10f0] text-black font-bold text-xs tracking-wide border-2 border-[#ff10f0] hover:bg-black hover:text-[#ff10f0] transition-all duration-200"
+                      className="px-2 sm:px-3 py-1 bg-[#ff10f0] text-black font-bold text-[10px] sm:text-xs tracking-wide border-2 border-[#ff10f0] hover:bg-black hover:text-[#ff10f0] transition-all duration-200"
                     >
                       {tool}
                     </span>

@@ -1,0 +1,30 @@
+🚀 RETRO SPACESHIP BACKGROUND
+============================
+
+Added animated pixel art spaceships flying across the background!
+
+4 Different Spaceship Types:
+----------------------------
+1. 🛸 FIGHTER - Small cyan/pink combat ship with yellow engines
+2. 🚀 CRUISER - Larger green/cyan ship with dual engines  
+3. 👾 ALIEN - Pink/magenta alien invader with yellow eyes
+4. 🛸 UFO - Green/cyan flying saucer with yellow lights
+
+Features:
+---------
+✅ Continuous random spawning (every 8-15 seconds)
+✅ Random heights (5% to 85% from top)
+✅ Random sizes (60% to 100% scale)
+✅ Smooth left-to-right flight animation (10-25 seconds)
+✅ Glowing cyan drop shadow effect
+✅ Semi-transparent (60% opacity) so they don't distract
+✅ Behind all content (z-index: 0)
+✅ Auto-cleanup of off-screen ships
+
+Where visible:
+--------------
+- Homepage (Hero, About, Experience, Skills, Contact sections)
+- Floats behind all content
+- Doesn't interfere with interactions
+
+Enjoy the retro space arcade vibes! 🕹️✨

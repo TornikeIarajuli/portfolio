@@ -91,7 +91,7 @@ const BASS_PATTERN = [
 export function BackgroundMusicProvider({ children }: { children: ReactNode }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMusicMuted, setIsMusicMuted] = useState(true); // Start muted
-  const [volume, setVolumeState] = useState(0.3);
+  const [volume, setVolumeState] = useState(0.05); // Very subtle background music
   const audioContextRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
   const isLoopingRef = useRef(false);

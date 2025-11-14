@@ -169,24 +169,24 @@ export default function ShopPage() {
       });
 
   return (
-    <div className="min-h-screen bg-[#0a0014] retro-grid scanlines pt-24 pb-16 px-4">
+    <div className="min-h-screen bg-[#0a0014] retro-grid scanlines pt-20 sm:pt-24 pb-12 sm:pb-16 px-3 sm:px-4">
       <div className="container mx-auto max-w-6xl">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-block px-8 py-4 bg-black border-4 border-[#ff10f0] mb-6">
-            <h1 className="text-4xl md:text-5xl font-bold text-[#ff10f0] tracking-wider">
+        <div className="text-center mb-8 md:mb-12">
+          <div className="inline-block px-4 sm:px-6 md:px-8 py-3 md:py-4 bg-black border-4 border-[#ff10f0] mb-4 md:mb-6">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#ff10f0] tracking-wider">
               🏪 ARCADE SHOP
             </h1>
           </div>
-          <div className="flex items-center justify-center gap-6">
-            <div className="px-6 py-3 bg-black border-3 border-[#ffff00]">
-              <p className="text-[#ffff00] text-xl font-bold tracking-wider">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6">
+            <div className="px-4 sm:px-6 py-2 sm:py-3 bg-black border-3 border-[#ffff00]">
+              <p className="text-[#ffff00] text-base sm:text-lg md:text-xl font-bold tracking-wider">
                 🪙 {coins} COINS
               </p>
             </div>
             <Link
               href="/"
-              className="px-6 py-3 border-3 border-[#00ffff] text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-all duration-300 font-bold tracking-wider"
+              className="px-4 sm:px-6 py-2 sm:py-3 border-3 border-[#00ffff] text-[#00ffff] hover:bg-[#00ffff] hover:text-black transition-all duration-300 font-bold tracking-wider text-sm sm:text-base"
               style={{ borderWidth: '3px' }}
             >
               ← BACK
@@ -195,7 +195,7 @@ export default function ShopPage() {
         </div>
 
         {/* Category Filter */}
-        <div className="flex gap-2 mb-8 flex-wrap justify-center">
+        <div className="flex gap-1.5 sm:gap-2 mb-6 md:mb-8 flex-wrap justify-center">
           {(['all', 'cursor', 'nameColor', 'badge', 'title'] as Category[]).map((category) => {
             const labels = {
               all: '🎮 ALL',
@@ -209,7 +209,7 @@ export default function ShopPage() {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 border-2 font-bold tracking-wider text-sm transition-all ${
+                className={`px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 border-2 font-bold tracking-wider text-[10px] sm:text-xs md:text-sm transition-all ${
                   selectedCategory === category
                     ? 'bg-[#ff10f0] text-black border-[#ff10f0]'
                     : 'bg-black text-[#00ffff] border-[#00ffff] hover:bg-[#00ffff] hover:text-black'
@@ -222,49 +222,49 @@ export default function ShopPage() {
         </div>
 
         {/* Shop Items Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {filteredItems.map((item) => {
             const owned = isOwned(item.id);
 
             return (
               <div
                 key={item.id}
-                className={`border-3 p-6 bg-black transition-all ${
+                className={`border-3 p-4 sm:p-5 md:p-6 bg-black transition-all ${
                   owned
                     ? 'border-[#39ff14]'
                     : 'border-[#00ffff] hover:border-[#ff10f0]'
                 }`}
                 style={{ borderWidth: '3px' }}
               >
-                <div className="text-center mb-4">
-                  <div className="text-6xl mb-3">{item.icon}</div>
-                  <h3 className="text-xl font-bold text-[#ff10f0] tracking-wider mb-2">
+                <div className="text-center mb-3 md:mb-4">
+                  <div className="text-4xl sm:text-5xl md:text-6xl mb-2 md:mb-3">{item.icon}</div>
+                  <h3 className="text-base sm:text-lg md:text-xl font-bold text-[#ff10f0] tracking-wider mb-1.5 md:mb-2">
                     {item.name}
                   </h3>
-                  <p className="text-[#00ffff] text-sm mb-4">
+                  <p className="text-[#00ffff] text-xs sm:text-sm mb-3 md:mb-4">
                     {item.description}
                   </p>
                 </div>
 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <div className="text-[#ffff00] font-bold text-lg">
+                    <div className="text-[#ffff00] font-bold text-base sm:text-lg">
                       🪙 {item.price}
                     </div>
 
                     {owned ? (
-                      <div className="px-4 py-2 bg-[#39ff14] text-black font-bold text-sm">
+                      <div className="px-3 sm:px-4 py-1.5 sm:py-2 bg-[#39ff14] text-black font-bold text-xs sm:text-sm">
                         ✓ OWNED
                       </div>
                     ) : purchaseSuccess === item.id ? (
-                      <div className="px-4 py-2 bg-[#39ff14] text-black font-bold text-sm animate-pulse">
+                      <div className="px-3 sm:px-4 py-1.5 sm:py-2 bg-[#39ff14] text-black font-bold text-xs sm:text-sm animate-pulse">
                         PURCHASED!
                       </div>
                     ) : (
                       <button
                         onClick={() => handlePurchase(item.id, item.price)}
                         disabled={coins < item.price}
-                        className={`px-4 py-2 font-bold text-sm transition-all ${
+                        className={`px-3 sm:px-4 py-1.5 sm:py-2 font-bold text-xs sm:text-sm transition-all ${
                           coins >= item.price
                             ? 'bg-[#ff10f0] text-black hover:bg-[#00ffff] hover:text-black'
                             : 'bg-gray-700 text-gray-500 cursor-not-allowed'
@@ -279,7 +279,7 @@ export default function ShopPage() {
                   {owned && item.category !== 'badgeSlot' && (
                     <button
                       onClick={() => handleEquip(item.id)}
-                      className={`w-full px-4 py-2 font-bold text-sm transition-all ${
+                      className={`w-full px-3 sm:px-4 py-1.5 sm:py-2 font-bold text-xs sm:text-sm transition-all ${
                         isEquipped(item.id)
                           ? 'bg-[#ffff00] text-black border-2 border-[#ffff00]'
                           : 'bg-black text-[#00ffff] border-2 border-[#00ffff] hover:bg-[#00ffff] hover:text-black'
@@ -295,22 +295,22 @@ export default function ShopPage() {
         </div>
 
         {filteredItems.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-[#00ffff] text-xl">No items in this category yet!</p>
+          <div className="text-center py-8 md:py-12">
+            <p className="text-[#00ffff] text-base sm:text-lg md:text-xl">No items in this category yet!</p>
           </div>
         )}
 
         {/* Earn More Coins CTA */}
-        <div className="mt-12 text-center border-4 border-[#ffff00] p-8 bg-black/50">
-          <h3 className="text-2xl font-bold text-[#ffff00] mb-4 tracking-wider">
+        <div className="mt-8 md:mt-12 text-center border-4 border-[#ffff00] p-4 sm:p-6 md:p-8 bg-black/50">
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-[#ffff00] mb-3 md:mb-4 tracking-wider">
             💰 NEED MORE COINS?
           </h3>
-          <p className="text-[#00ffff] mb-6">
+          <p className="text-[#00ffff] text-sm sm:text-base mb-4 md:mb-6">
             Play games to earn coins! Higher scores = more coins!
           </p>
           <Link
             href="/"
-            className="inline-block px-8 py-4 bg-[#39ff14] text-black font-bold tracking-wider hover:bg-[#00ffff] transition-all duration-300"
+            className="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-[#39ff14] text-black font-bold tracking-wider hover:bg-[#00ffff] transition-all duration-300 text-sm sm:text-base"
           >
             🎮 PLAY GAMES
           </Link>

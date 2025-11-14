@@ -9,6 +9,7 @@ import Contact from '@/components/Contact';
 import Navigation from '@/components/Navigation';
 import LoadingScreen from '@/components/LoadingScreen';
 import BackgroundParticles from '@/components/BackgroundParticles';
+import SpaceshipBackground from '@/components/SpaceshipBackground';
 import KonamiCode from '@/components/KonamiCode';
 import EasterEggs from '@/components/EasterEggs';
 import { SoundProvider } from '@/components/SoundEffects';
@@ -49,6 +50,7 @@ export default function Home() {
       <SoundProvider>
         <LoadingScreen />
         <BackgroundParticles />
+        <SpaceshipBackground />
         <KonamiCode />
         <EasterEggs />
         <AchievementsModal isOpen={achievementsOpen} onClose={() => setAchievementsOpen(false)} />
